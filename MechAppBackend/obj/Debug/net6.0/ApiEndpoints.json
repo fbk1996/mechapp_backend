@@ -1,0 +1,12 @@
+[
+  {
+    "ContainingType": "MechAppBackend.Controllers.PrepareNewUser",
+    "Method": "Get",
+    "RelativePath": "api/addnewuser",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]
