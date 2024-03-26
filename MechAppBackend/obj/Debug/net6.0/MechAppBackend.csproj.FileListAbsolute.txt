@@ -73,3 +73,4 @@ C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\PhoneN
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Nager.Holiday.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\RestSharp.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\smsapi.dll
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.sourcelink.json

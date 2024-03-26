@@ -7,6 +7,38 @@
       "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\controllers\\logincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\helpers\\logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\helpers\\logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\helpers\\checkcookietoken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\helpers\\checkcookietoken.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\helpers\\calculatedates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\helpers\\calculatedates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\conns\\connections.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\conns\\connections.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\appsettings\\appdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\appsettings\\appdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\appsettings\\getappdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\appsettings\\getappdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\helpers\\emailtemplates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\helpers\\emailtemplates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\helpers\\generators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\helpers\\generators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\controllers\\preparenewuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\controllers\\preparenewuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -31,14 +63,6 @@
       "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\appsettings\\getappdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\appsettings\\getappdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\appsettings\\appdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\appsettings\\appdata.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
@@ -61,26 +85,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\helpers\\sender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\helpers\\sender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\helpers\\logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\helpers\\logger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\helpers\\generators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\helpers\\generators.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\conns\\connections.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\conns\\connections.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\helpers\\emailtemplates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\helpers\\emailtemplates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|c:\\visual projects\\mechapp\\mechappbackend\\mechappbackend\\helpers\\calculatedates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{57B98773-50D0-43D2-968F-C47C1D70F4A3}|MechAppBackend\\MechAppBackend.csproj|solutionrelative:mechappbackend\\helpers\\calculatedates.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -90,11 +94,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CheckCookieToken.cs",
+              "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Helpers\\CheckCookieToken.cs",
+              "RelativeDocumentMoniker": "MechAppBackend\\Helpers\\CheckCookieToken.cs",
+              "ToolTip": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Helpers\\CheckCookieToken.cs",
+              "RelativeToolTip": "MechAppBackend\\Helpers\\CheckCookieToken.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAADYAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-26T19:16:45.564Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -104,14 +121,14 @@
               "RelativeDocumentMoniker": "MechAppBackend\\Controllers\\LoginController.cs",
               "ToolTip": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Controllers\\LoginController.cs",
               "RelativeToolTip": "MechAppBackend\\Controllers\\LoginController.cs",
-              "ViewState": "AQIAAGMAAAAAAAAAAAAnwHUAAAAsAAAA",
+              "ViewState": "AQIAABUBAAAAAAAAAAAAAFoBAABSAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-25T21:42:43.938Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 9,
               "Title": "PrepareNewUser.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Controllers\\PrepareNewUser.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Controllers\\PrepareNewUser.cs",
@@ -119,12 +136,11 @@
               "RelativeToolTip": "MechAppBackend\\Controllers\\PrepareNewUser.cs",
               "ViewState": "AQIAAA8AAAAAAAAAAAAAABoAAAA/AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-25T21:22:26.512Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-25T21:22:26.512Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 12,
               "Title": "MechAppContext.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Data\\MechAppContext.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Data\\MechAppContext.cs",
@@ -137,7 +153,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 13,
               "Title": "MechappClientsContext.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Data\\MechappClientsContext.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Data\\MechappClientsContext.cs",
@@ -150,7 +166,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 15,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\appsettings.Development.json",
               "RelativeDocumentMoniker": "MechAppBackend\\appsettings.Development.json",
@@ -158,12 +174,11 @@
               "RelativeToolTip": "MechAppBackend\\appsettings.Development.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAADAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-03-25T21:05:20.545Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-25T21:05:20.545Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 14,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\appsettings.json",
               "RelativeDocumentMoniker": "MechAppBackend\\appsettings.json",
@@ -171,12 +186,11 @@
               "RelativeToolTip": "MechAppBackend\\appsettings.json",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAADAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-03-25T21:04:26.697Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-25T21:04:26.697Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 11,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Program.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Program.cs",
@@ -184,12 +198,11 @@
               "RelativeToolTip": "MechAppBackend\\Program.cs",
               "ViewState": "AQIAAAMAAAAAAAAAAAAAABIAAABBAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-25T21:02:41.093Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-25T21:02:41.093Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 17,
               "Title": "encryptions.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Security\\encryptions.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Security\\encryptions.cs",
@@ -197,12 +210,11 @@
               "RelativeToolTip": "MechAppBackend\\Security\\encryptions.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAA1AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-25T20:43:56.2Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-25T20:43:56.2Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 18,
               "Title": "keys.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Security\\keys.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Security\\keys.cs",
@@ -210,12 +222,11 @@
               "RelativeToolTip": "MechAppBackend\\Security\\keys.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-25T20:29:15.447Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-25T20:29:15.447Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 16,
               "Title": "hashes.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Security\\hashes.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Security\\hashes.cs",
@@ -223,12 +234,11 @@
               "RelativeToolTip": "MechAppBackend\\Security\\hashes.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-25T19:52:32.198Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-25T19:52:32.198Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 10,
               "Title": "Validators.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Helpers\\Validators.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Helpers\\Validators.cs",
@@ -236,12 +246,11 @@
               "RelativeToolTip": "MechAppBackend\\Helpers\\Validators.cs",
               "ViewState": "AQIAAEIAAAAAAAAAAAAAABEAAAA0AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-25T19:32:54.505Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-25T19:32:54.505Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 19,
               "Title": "smssender.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Helpers\\smssender.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Helpers\\smssender.cs",
@@ -249,12 +258,11 @@
               "RelativeToolTip": "MechAppBackend\\Helpers\\smssender.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-25T19:32:23.035Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-25T19:32:23.035Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 20,
               "Title": "Sender.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Helpers\\Sender.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Helpers\\Sender.cs",
@@ -267,20 +275,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 1,
               "Title": "Logger.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Helpers\\Logger.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Helpers\\Logger.cs",
               "ToolTip": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Helpers\\Logger.cs",
               "RelativeToolTip": "MechAppBackend\\Helpers\\Logger.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAFMAAAAJAAAA",
+              "ViewState": "AQIAADMAAAAAAAAAAAAAAFMAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-25T19:22:28.61Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 8,
               "Title": "generators.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Helpers\\generators.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Helpers\\generators.cs",
@@ -293,7 +301,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 7,
               "Title": "EmailTemplates.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Helpers\\EmailTemplates.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Helpers\\EmailTemplates.cs",
@@ -306,7 +314,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 3,
               "Title": "CalculateDates.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Helpers\\CalculateDates.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Helpers\\CalculateDates.cs",
@@ -319,7 +327,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 4,
               "Title": "connections.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\Conns\\connections.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\Conns\\connections.cs",
@@ -332,7 +340,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 6,
               "Title": "GetAppData.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\AppSettings\\GetAppData.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\AppSettings\\GetAppData.cs",
@@ -345,7 +353,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 5,
               "Title": "appdata.cs",
               "DocumentMoniker": "C:\\visual projects\\MechApp\\MechAppBackend\\MechAppBackend\\AppSettings\\appdata.cs",
               "RelativeDocumentMoniker": "MechAppBackend\\AppSettings\\appdata.cs",
