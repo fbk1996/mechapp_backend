@@ -156,6 +156,15 @@ namespace MechAppBackend.Controllers
                     return new JsonResult(new { result = "no_auth" });
                 }
 
+                DateTime expireCookie = DateTime.Now.AddHours(2);
+
+                CookieOptions cookieOptions = new CookieOptions
+                {
+                    Expires = expireCookie
+                };
+
+                Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
                 resultBuilder.Append("authenticated");
                 // If token is valid, continue (implicit success case)
             }
