@@ -17,8 +17,10 @@ namespace MechAppBackend.Data
         {
         }
 
+        public virtual DbSet<Department> Departments { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<UsersDepartment> UsersDepartments { get; set; } = null!;
         public virtual DbSet<UsersRole> UsersRoles { get; set; } = null!;
         public virtual DbSet<UsersToken> UsersTokens { get; set; } = null!;
         public virtual DbSet<ValidationCode> ValidationCodes { get; set; } = null!;
@@ -34,6 +36,21 @@ namespace MechAppBackend.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Department>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Address).HasColumnType("text");
+
+                entity.Property(e => e.City).HasColumnType("text");
+
+                entity.Property(e => e.Description).HasColumnType("text");
+
+                entity.Property(e => e.Name).HasColumnType("text");
+
+                entity.Property(e => e.Postcode).HasColumnType("text");
+            });
+
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -76,6 +93,29 @@ namespace MechAppBackend.Data
                 entity.Property(e => e.Postcode).HasColumnType("text");
 
                 entity.Property(e => e.Salt).HasColumnType("text");
+            });
+
+            modelBuilder.Entity<UsersDepartment>(entity =>
+            {
+                entity.HasIndex(e => e.DepartmentId, "DepartmentID");
+
+                entity.HasIndex(e => e.UserId, "UserID");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.Department)
+                    .WithMany(p => p.UsersDepartments)
+                    .HasForeignKey(d => d.DepartmentId)
+                    .HasConstraintName("UsersDepartments_ibfk_1");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UsersDepartments)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("UsersDepartments_ibfk_2");
             });
 
             modelBuilder.Entity<UsersRole>(entity =>

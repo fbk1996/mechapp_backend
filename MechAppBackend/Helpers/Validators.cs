@@ -111,5 +111,11 @@ namespace MechAppBackend.Helpers
         {
             return password == repeatPassword;
         }
+
+        public static bool ValidateEmail(string inputText)
+        {
+            var mailFormat = @"^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,6})+$";
+            return Regex.IsMatch(inputText, mailFormat);
+        }
     }
 }

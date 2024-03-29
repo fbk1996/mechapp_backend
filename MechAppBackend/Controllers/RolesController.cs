@@ -240,7 +240,7 @@ namespace MechAppBackend.Controllers
             try
             {
                 // Check if a role with the same name already exists
-                var roledb = _context.Roles.FirstOrDefault(r => r.Name.ToLower() == role.name.ToLower());
+                var roledb = _context.Roles.FirstOrDefault(r => r.Name.ToLower() == role.name.Trim().ToLower());
 
                 if (roledb != null)
                     return new JsonResult(new { result = "exists" });
@@ -248,7 +248,7 @@ namespace MechAppBackend.Controllers
                 // Create and add the new role to the database
                 Role newRole = new Role
                 {
-                    Name = role.name,
+                    Name = role.name.Trim(),
                     Permissions = JsonConvert.SerializeObject(role.permissions)
                 };
 

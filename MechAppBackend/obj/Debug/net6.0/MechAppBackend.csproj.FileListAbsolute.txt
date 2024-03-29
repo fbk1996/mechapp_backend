@@ -1,3 +1,11 @@
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.csproj.AssemblyReference.cache
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.GeneratedMSBuildEditorConfig.editorconfig
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.AssemblyInfoInputs.cache
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.AssemblyInfo.cs
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.csproj.CoreCompileInputs.cache
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.MvcApplicationPartsAssemblyInfo.cs
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.MvcApplicationPartsAssemblyInfo.cache
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.sourcelink.json
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\appsettings.Development.json
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\appsettings.json
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\MechAppBackend.exe
@@ -11,6 +19,7 @@ C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Humani
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\K4os.Compression.LZ4.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\K4os.Compression.LZ4.Streams.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\K4os.Hash.xxHash.dll
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\PhoneNumbers.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
@@ -21,9 +30,12 @@ C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Micros
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\MySql.Data.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\MySql.EntityFrameworkCore.dll
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Nager.Holiday.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Newtonsoft.Json.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\OpenSearch.Client.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\OpenSearch.Net.dll
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\RestSharp.dll
+C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\smsapi.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -48,13 +60,6 @@ C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\runtim
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
-C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.csproj.AssemblyReference.cache
-C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.GeneratedMSBuildEditorConfig.editorconfig
-C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.AssemblyInfoInputs.cache
-C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.AssemblyInfo.cs
-C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.csproj.CoreCompileInputs.cache
-C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.MvcApplicationPartsAssemblyInfo.cs
-C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.MvcApplicationPartsAssemblyInfo.cache
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\staticwebassets.build.json
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\staticwebassets.development.json
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\staticwebassets\msbuild.MechAppBackend.Microsoft.AspNetCore.StaticWebAssets.props
@@ -69,8 +74,3 @@ C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\refint
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.pdb
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.genruntimeconfig.cache
 C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\ref\MechAppBackend.dll
-C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\PhoneNumbers.dll
-C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\Nager.Holiday.dll
-C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\RestSharp.dll
-C:\visual projects\MechApp\MechAppBackend\MechAppBackend\bin\Debug\net6.0\smsapi.dll
-C:\visual projects\MechApp\MechAppBackend\MechAppBackend\obj\Debug\net6.0\MechAppBackend.sourcelink.json
