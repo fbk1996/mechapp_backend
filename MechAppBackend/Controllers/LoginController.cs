@@ -156,6 +156,14 @@ namespace MechAppBackend.Controllers
                     return new JsonResult(new { result = "no_auth" });
                 }
 
+                var sessionToken = _context.UsersTokens.FirstOrDefault(st => st.Token == _cookieValue);
+
+                if (sessionToken == null) return new JsonResult(new { result = "no_auth" });
+
+                var user = _context.Users.FirstOrDefault(u => u.Id == sessionToken.UserId);
+
+                if (user == null) return new JsonResult(new { result = "no_auth" });
+
                 DateTime expireCookie = DateTime.Now.AddHours(2);
 
                 CookieOptions cookieOptions = new CookieOptions
@@ -165,7 +173,11 @@ namespace MechAppBackend.Controllers
 
                 Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
-                resultBuilder.Append("authenticated");
+                return new JsonResult(new
+                {
+                    result = "authenticated",
+                    approle = user.AppRole
+                });
                 // If token is valid, continue (implicit success case)
             }
             catch (Exception ex)
@@ -380,6 +392,92 @@ namespace MechAppBackend.Controllers
         return new JsonResult(new {result =  resultBuilder.ToString()});
     }
 
+        /// <summary>
+        /// Change Password on First Login
+        /// Allows a user to change their password upon first login. 
+        /// Validates the session token from cookies and ensures the password adheres to defined policies.
+        ///
+        /// Parameters:
+        /// - firstPasswordOb pass: An object containing the new password and its repetition.
+        ///   - pass.password: The new password.
+        ///   - pass.repeatPassword: The repetition of the new password for confirmation.
+        ///
+        /// Responses:
+        /// - "password_changed": Indicates the password was successfully changed.
+        /// - "no_auth": Returned if there is no authentication token or if the token is invalid.
+        /// - "no_data": Returned if required password data is missing.
+        /// - "no_password_policy": Returned if the new password does not meet the password policy.
+        /// - "password_not_matching": Returned if the password and its repetition do not match.
+        /// - "error": Returned in case of a database exception during the operation or if user/token is not found.
+        /// </summary>
+        /// <param name="pass">The firstPasswordOb object containing new password information.</param>
+        /// <returns>JsonResult indicating the outcome of the password change operation</returns>
+        [HttpPost("/api/firstlogin")]
+        public IActionResult ChangeFirstLoginPassword([FromBody] firstPasswordOb pass)
+        {
+            StringBuilder resultBuilder = new StringBuilder();
+
+            string _cookieValue = string.Empty;
+
+            // Validate the session token from cookies
+            if (Request.Cookies["sessionToken"] != null)
+            {
+                _cookieValue = Request.Cookies["sessionToken"];
+            }
+            else return new JsonResult(new { result = "no_auth" });
+
+            // Check if the token is valid
+            if (!checkToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
+
+            // Extend cookie expiration
+            DateTime expireCookie = DateTime.Now.AddHours(2);
+            CookieOptions cookieOptions = new CookieOptions { Expires = expireCookie };
+            Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            // Validate password data
+            if (string.IsNullOrEmpty(pass.password) || string.IsNullOrEmpty(pass.repeatPassword))
+                return new JsonResult("no_data");
+
+            if (!Validators.CheckPasswordPolicy(pass.password))
+                return new JsonResult(new { result = "no_password_policy" });
+
+            if (!Validators.isPasswordMatching(pass.password, pass.repeatPassword))
+                return new JsonResult(new { result = "password_not_matching" });
+
+            try
+            {
+                // Generate new password and salt
+                string _salt = generators.generatePassword(10);
+                string _combinedPassword = pass.password + _salt;
+
+                // Find the user by session token
+                var sessionToken = _context.UsersTokens.FirstOrDefault(st => st.Token == _cookieValue);
+                if (sessionToken == null)
+                    return new JsonResult(new { result = "error" });
+
+                var user = _context.Users.FirstOrDefault(u => u.Id == sessionToken.Id);
+                if (user == null)
+                    return new JsonResult(new { result = "error" });
+
+                // Update the user's password
+                user.Password = hashes.GenerateSHA512Hash(_combinedPassword);
+                user.Salt = _salt;
+                _context.SaveChanges();
+
+                // Indicate successful password change
+                resultBuilder.Append("password_changed");
+            }
+            catch (MySqlException ex)
+            {
+                // Log exception and return 'error'
+                resultBuilder.Clear().Append("error");
+                Logger.SendException("MechApp", "LoginController", "ChangeFirstLoginPassword", ex);
+            }
+
+            return new JsonResult(new { result = resultBuilder.ToString() });
+        }
+
+
     }
     public class loginOb //user login object
     {
@@ -391,6 +489,12 @@ namespace MechAppBackend.Controllers
     {
         public string? token { get; set; }
         public string? email { get; set; }
+        public string? password { get; set; }
+        public string? repeatPassword { get; set; }
+    }
+
+    public class firstPasswordOb
+    {
         public string? password { get; set; }
         public string? repeatPassword { get; set; }
     }
