@@ -47,7 +47,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -115,7 +115,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -216,7 +216,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -305,7 +305,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -375,7 +375,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -438,7 +438,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {

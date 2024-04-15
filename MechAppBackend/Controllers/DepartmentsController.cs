@@ -50,7 +50,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -122,7 +122,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -195,7 +195,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -276,7 +276,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -369,7 +369,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -457,7 +457,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -555,7 +555,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -610,24 +610,32 @@ namespace MechAppBackend.Controllers
                     if (userdb.AppRole == "Employee")
                         return new JsonResult(new { result = "exists" });
                     // Update the existing user if they are an client
-                    userdb.Name = _name;
-                    userdb.Lastname = _lastname;
-                    userdb.Email = user.email.Trim();
-                    userdb.Nip = user.nip.Trim();
-                    userdb.Phone = user.phone.Trim();
-                    userdb.Postcode = user.postcode.Trim();
-                    userdb.City = user.city.Trim();
-                    userdb.Address = user.address.Trim();
-                    userdb.Color = user.color;
-                    userdb.AppRole = "Employee";
-
-                    _context.UsersDepartments.Add(new UsersDepartment
+                    if (userdb.IsDeleted != 1)
                     {
-                        UserId = userdb.Id,
-                        DepartmentId = user.departmentID
-                    });
+                        userdb.Name = _name;
+                        userdb.Lastname = _lastname;
+                        userdb.Email = user.email.Trim();
+                        userdb.Nip = user.nip.Trim();
+                        userdb.Phone = user.phone.Trim();
+                        userdb.Postcode = user.postcode.Trim();
+                        userdb.City = user.city.Trim();
+                        userdb.Address = user.address.Trim();
+                        userdb.Color = user.color;
+                        userdb.AppRole = "Employee";
+
+                        _context.UsersDepartments.Add(new UsersDepartment
+                        {
+                            UserId = userdb.Id,
+                            DepartmentId = user.departmentID
+                        });
+                    }
+                    else
+                    {
+                        userdb.IsDeleted = 0;
+                    }
 
                     _context.SaveChanges();
+
 
                     Sender.SendExistingAccountAddEmployeeEmail("Mechapp - Witamy w zespole", userdb.Name, userdb.Lastname, userdb.Email);
                 }
@@ -710,7 +718,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {
@@ -774,7 +782,7 @@ namespace MechAppBackend.Controllers
 
             if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
             CookieOptions cookieOptions = new CookieOptions
             {

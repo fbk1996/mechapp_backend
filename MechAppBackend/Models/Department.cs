@@ -7,6 +7,7 @@ namespace MechAppBackend.Models
     {
         public Department()
         {
+            Orders = new HashSet<Order>();
             UsersDepartments = new HashSet<UsersDepartment>();
         }
 
@@ -17,6 +18,7 @@ namespace MechAppBackend.Models
         public string? City { get; set; }
         public string? Address { get; set; }
 
+        public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<UsersDepartment> UsersDepartments { get; set; }
     }
 }

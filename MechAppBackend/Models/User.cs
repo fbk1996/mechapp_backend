@@ -7,9 +7,11 @@ namespace MechAppBackend.Models
     {
         public User()
         {
+            Orders = new HashSet<Order>();
             UsersDepartments = new HashSet<UsersDepartment>();
             UsersRoles = new HashSet<UsersRole>();
             UsersTokens = new HashSet<UsersToken>();
+            UsersVehicles = new HashSet<UsersVehicle>();
             ValidationCodes = new HashSet<ValidationCode>();
         }
 
@@ -33,9 +35,11 @@ namespace MechAppBackend.Models
         public short? IsLoyalCustomer { get; set; }
         public short? IsDeleted { get; set; }
 
+        public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<UsersDepartment> UsersDepartments { get; set; }
         public virtual ICollection<UsersRole> UsersRoles { get; set; }
         public virtual ICollection<UsersToken> UsersTokens { get; set; }
+        public virtual ICollection<UsersVehicle> UsersVehicles { get; set; }
         public virtual ICollection<ValidationCode> ValidationCodes { get; set; }
     }
 }

@@ -41,7 +41,7 @@ namespace MechAppBackend.Helpers
             if (now > sessionToken.Expire) return false;
 
             // Extend the expiration date of the token by two hours
-            DateTime expireDate = DateTime.Now.AddHours(2);
+            DateTime expireDate = endCookieDate.GetEndCookieDate();
             sessionToken.Expire = expireDate;
 
             // Save the updated token information in the database

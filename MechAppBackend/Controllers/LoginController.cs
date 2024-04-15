@@ -71,7 +71,7 @@ namespace MechAppBackend.Controllers
                 //check if session token exist
                 var sessionToken = _context.UsersTokens.FirstOrDefault(st => st.UserId == user.Id);
 
-                DateTime expireDate = DateTime.Now.AddHours(2);
+                DateTime expireDate = endCookieDate.GetEndCookieDate();
                 //if session token exist update variable in database
                 if (sessionToken != null)
                 {
@@ -94,6 +94,7 @@ namespace MechAppBackend.Controllers
                 {
                     HttpOnly = true,
                     Expires = expireDate,
+                    Path = "/",
                     Secure = true,
                     SameSite = SameSiteMode.None
                 };
@@ -164,7 +165,7 @@ namespace MechAppBackend.Controllers
 
                 if (user == null) return new JsonResult(new { result = "no_auth" });
 
-                DateTime expireCookie = DateTime.Now.AddHours(2);
+                DateTime expireCookie = endCookieDate.GetEndCookieDate();
 
                 CookieOptions cookieOptions = new CookieOptions
                 {
@@ -430,7 +431,7 @@ namespace MechAppBackend.Controllers
             if (!checkToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
 
             // Extend cookie expiration
-            DateTime expireCookie = DateTime.Now.AddHours(2);
+            DateTime expireCookie = endCookieDate.GetEndCookieDate();
             CookieOptions cookieOptions = new CookieOptions { Expires = expireCookie };
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
@@ -462,6 +463,7 @@ namespace MechAppBackend.Controllers
                 // Update the user's password
                 user.Password = hashes.GenerateSHA512Hash(_combinedPassword);
                 user.Salt = _salt;
+                user.IsFirstLogin = 0;
                 _context.SaveChanges();
 
                 // Indicate successful password change
