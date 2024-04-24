@@ -8,7 +8,7 @@ namespace MechAppBackend.Models
         public long Id { get; set; }
         public long? EstimateId { get; set; }
         public string? Name { get; set; }
-        public int? Rhwamount { get; set; }
+        public float? Rhwamount { get; set; }
         public decimal? GrossUnitPrice { get; set; }
         public decimal? TotalPrice { get; set; }
 

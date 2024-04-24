@@ -9,6 +9,7 @@ namespace MechAppBackend.Models
         {
             CheckLists = new HashSet<CheckList>();
             Estimates = new HashSet<Estimate>();
+            OrdersImages = new HashSet<OrdersImage>();
         }
 
         public long Id { get; set; }
@@ -16,8 +17,7 @@ namespace MechAppBackend.Models
         public long? VehicleId { get; set; }
         public long? DepartmentId { get; set; }
         public string? ClientDiagnose { get; set; }
-        public string? Images { get; set; }
-        public string? Status { get; set; }
+        public short? Status { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public short? SendStartNotification { get; set; }
@@ -29,5 +29,6 @@ namespace MechAppBackend.Models
         public virtual UsersVehicle? Vehicle { get; set; }
         public virtual ICollection<CheckList> CheckLists { get; set; }
         public virtual ICollection<Estimate> Estimates { get; set; }
+        public virtual ICollection<OrdersImage> OrdersImages { get; set; }
     }
 }

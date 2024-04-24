@@ -23,6 +23,7 @@ namespace MechAppBackend.Data
         public virtual DbSet<EstimatePart> EstimateParts { get; set; } = null!;
         public virtual DbSet<EstimateService> EstimateServices { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
+        public virtual DbSet<OrdersImage> OrdersImages { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UsersDepartment> UsersDepartments { get; set; } = null!;
@@ -203,8 +204,6 @@ namespace MechAppBackend.Data
 
                 entity.Property(e => e.StartDate).HasColumnType("datetime");
 
-                entity.Property(e => e.Status).HasColumnType("text");
-
                 entity.Property(e => e.VehicleId).HasColumnName("VehicleID");
 
                 entity.HasOne(d => d.Client)
@@ -221,6 +220,20 @@ namespace MechAppBackend.Data
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.VehicleId)
                     .HasConstraintName("Orders_ibfk_2");
+            });
+
+            modelBuilder.Entity<OrdersImage>(entity =>
+            {
+                entity.HasIndex(e => e.OrderId, "OrderID");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrdersImages)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("OrdersImages_ibfk_1");
             });
 
             modelBuilder.Entity<Role>(entity =>

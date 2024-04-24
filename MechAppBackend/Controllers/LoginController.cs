@@ -89,6 +89,8 @@ namespace MechAppBackend.Controllers
 
                     _context.UsersTokens.Add(newToken);
                 }
+
+                _context.SaveChanges();
                 //prepare cookie options
                 CookieOptions cookieOptions = new CookieOptions
                 {
@@ -456,7 +458,7 @@ namespace MechAppBackend.Controllers
                 if (sessionToken == null)
                     return new JsonResult(new { result = "error" });
 
-                var user = _context.Users.FirstOrDefault(u => u.Id == sessionToken.Id);
+                var user = _context.Users.FirstOrDefault(u => u.Id == sessionToken.UserId);
                 if (user == null)
                     return new JsonResult(new { result = "error" });
 

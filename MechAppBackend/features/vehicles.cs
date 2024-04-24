@@ -38,8 +38,8 @@ namespace MechAppBackend.features
         /// - "error": General error message for database operation failures.
         /// </summary>
         /// <returns>A string indicating the result of the operation.</returns>
-        public string AddVehicle (string _producer, string _model, string _produceDate, int _mileage, string _vin, string _engineNumber,
-            string _registrationNumber, int _enginePower, string _engineCapacity, string _fuelType, int _owner)
+        public string AddVehicle (string _producer, string _model, string _produceDate, int? _mileage, string _vin, string _engineNumber,
+            string _registrationNumber, int? _enginePower, string _engineCapacity, string _fuelType, int? _owner)
         {
             // Validate required fields
             if (string.IsNullOrEmpty(_producer))
@@ -129,8 +129,8 @@ namespace MechAppBackend.features
         /// - "error": General error message for invalid vehicle ID or database operation failures.
         /// </summary>
         /// <returns>A string indicating the result of the operation.</returns>
-        public string EditVehicle(int _id, string _produceDate, int _mileage, string _engineNumber,
-            string _registrationNumber, int _enginePower, string _engineCapacity)
+        public string EditVehicle(int? _id, string _produceDate, int? _mileage, string _engineNumber,
+            string _registrationNumber, int? _enginePower, string _engineCapacity)
         {
             // Validate required fields
             if (string.IsNullOrEmpty(_produceDate))
@@ -215,6 +215,21 @@ namespace MechAppBackend.features
 
     }
 
+    public class vehicleOb
+    {
+        public int? id { get; set; }
+        public string? producer { get; set; }
+        public string? model { get; set; }
+        public string? produceDate { get; set; }
+        public int? mileage { get; set; }
+        public string? vin { get; set; }
+        public string? engineNumber { get; set; }
+        public string? registrationNumber { get; set; }
+        public int? enginePower { get; set; }
+        public string? engineCapacity { get; set; }
+        public string? fuelType { get; set; }
+    } 
+
     public class AddVehicleOb
     {
         public string? Producer { get; set; }
@@ -226,6 +241,7 @@ namespace MechAppBackend.features
         public string? RegistrationNumber { get; set; }
         public int? EnginePower { get; set; }
         public string? EngineCapacity { get; set; }
+        public string? fuelType { get; set; }
         public int? Owner { get; set; }
     }
 

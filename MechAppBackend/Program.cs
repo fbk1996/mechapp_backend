@@ -16,7 +16,7 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
-            builder => builder.WithOrigins("http://localhost:3000", "https://mechapp-frontend.vercel.app") // Replace with your client's URL
+            builder => builder.WithOrigins("http://localhost:3000", "https://mechapp-frontend.vercel.app", "https://fronttest.motodex.org") // Replace with your client's URL
                     .AllowAnyMethod()
                     .AllowCredentials()
                     .AllowAnyHeader());
