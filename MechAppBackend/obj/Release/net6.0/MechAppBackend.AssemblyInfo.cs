@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MechAppBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f771f6c156c3f75cee1aa91cfc2dc4574589e161")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7d8dafc76622210e5ee9f767d5c3574a5d85aa0c")]
 [assembly: System.Reflection.AssemblyProductAttribute("MechAppBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MechAppBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
