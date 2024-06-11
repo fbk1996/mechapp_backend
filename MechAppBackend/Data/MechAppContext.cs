@@ -17,14 +17,17 @@ namespace MechAppBackend.Data
         {
         }
 
+        public virtual DbSet<AppSetting> AppSettings { get; set; } = null!;
         public virtual DbSet<CheckList> CheckLists { get; set; } = null!;
         public virtual DbSet<Department> Departments { get; set; } = null!;
         public virtual DbSet<Estimate> Estimates { get; set; } = null!;
         public virtual DbSet<EstimatePart> EstimateParts { get; set; } = null!;
         public virtual DbSet<EstimateService> EstimateServices { get; set; } = null!;
+        public virtual DbSet<Log> Logs { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<OrdersImage> OrdersImages { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
+        public virtual DbSet<Service> Services { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<UsersDepartment> UsersDepartments { get; set; } = null!;
         public virtual DbSet<UsersRole> UsersRoles { get; set; } = null!;
@@ -37,12 +40,21 @@ namespace MechAppBackend.Data
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                //optionsBuilder.UseMySQL("Server=213.222.222.170;Database=mechappNew;Uid=AppAdmin;Pwd=Entropia13!;");
+                optionsBuilder.UseMySQL("Server=213.222.222.170;Database=mechappNew;Uid=AppAdmin;Pwd=Entropia13!;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AppSetting>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.RwhdiscountLoyalCustomer).HasColumnName("RWHDiscountLoyalCustomer");
+
+                entity.Property(e => e.Rwhprice).HasColumnName("RWHPrice");
+            });
+
             modelBuilder.Entity<CheckList>(entity =>
             {
                 entity.ToTable("CheckList");
@@ -180,6 +192,26 @@ namespace MechAppBackend.Data
                     .HasConstraintName("EstimateServices_ibfk_1");
             });
 
+            modelBuilder.Entity<Log>(entity =>
+            {
+                entity.HasIndex(e => e.UserId, "UserID");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Action).HasColumnType("text");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.Description).HasColumnType("text");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Logs)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("Logs_ibfk_1");
+            });
+
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.HasIndex(e => e.ClientId, "ClientID");
@@ -241,6 +273,17 @@ namespace MechAppBackend.Data
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Name).HasColumnType("text");
+            });
+
+            modelBuilder.Entity<Service>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.IsActive).HasColumnName("isActive");
+
+                entity.Property(e => e.Name).HasColumnType("text");
+
+                entity.Property(e => e.Price).HasPrecision(10);
             });
 
             modelBuilder.Entity<User>(entity =>

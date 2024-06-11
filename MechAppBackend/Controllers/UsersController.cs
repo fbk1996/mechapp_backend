@@ -1,4 +1,6 @@
-﻿using MechAppBackend.Data;
+﻿using MechAppBackend.AppSettings;
+using MechAppBackend.Data;
+using MechAppBackend.features;
 using MechAppBackend.Helpers;
 using MechAppBackend.Models;
 using Microsoft.AspNetCore.Http;
@@ -257,7 +259,7 @@ namespace MechAppBackend.Controllers
 
             try
             {
-                // Find the specific user
+                // Find the specific user 
                 var user = _context.Users.FirstOrDefault(u => u.Id == id);
                 if (user == null)
                     return new JsonResult(new { result = "error" });
@@ -435,6 +437,12 @@ namespace MechAppBackend.Controllers
 
             try
             {
+                var count = _context.Users
+                    .Count(c => c.AppRole == "Employee");
+
+                if (count >= appdata.employeeAmount)
+                    return new JsonResult(new { result = "max_employee_reached" });
+
                 // Split names and assign appropriately
                 string[] namesList = user.names.Trim().Split(' ');
                 string _name = string.Empty;

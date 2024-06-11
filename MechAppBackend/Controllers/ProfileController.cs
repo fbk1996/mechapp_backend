@@ -247,12 +247,12 @@ namespace MechAppBackend.Controllers
 
             try
             {
-                // Fetch user data from database using the session token
+                //Fetch user data from database using the session token
                 var sessionToken = _context.UsersTokens.FirstOrDefault(st => st.Token == _cookieValue);
 
                 if (sessionToken != null)
                     return new JsonResult(new { result = "error" });
-                // Retrieve orders matching the status for the user
+                //Retrieve orders matching the status for the user
                 var orders = ordersController.GetClientOrders(_status, (int)sessionToken.UserId);
 
                 return new JsonResult(new

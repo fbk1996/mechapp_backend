@@ -217,42 +217,42 @@ namespace MechAppBackend.features
 
     public class vehicleOb
     {
-        public int? id { get; set; }
-        public string? producer { get; set; }
-        public string? model { get; set; }
-        public string? produceDate { get; set; }
-        public int? mileage { get; set; }
-        public string? vin { get; set; }
-        public string? engineNumber { get; set; }
-        public string? registrationNumber { get; set; }
-        public int? enginePower { get; set; }
-        public string? engineCapacity { get; set; }
-        public string? fuelType { get; set; }
+        public int id { get; set; }
+        public string producer { get; set; }
+        public string model { get; set; }
+        public string produceDate { get; set; }
+        public int mileage { get; set; }
+        public string vin { get; set; }
+        public string engineNumber { get; set; }
+        public string registrationNumber { get; set; }
+        public int enginePower { get; set; }
+        public string engineCapacity { get; set; }
+        public string fuelType { get; set; }
     } 
 
     public class AddVehicleOb
     {
-        public string? Producer { get; set; }
-        public string? Model { get; set; }
-        public string? ProduceDate { get; set; }
-        public int? Mileage { get; set; }
-        public string? Vin { get; set; }
-        public string? EngineNumber { get; set; }
-        public string? RegistrationNumber { get; set; }
-        public int? EnginePower { get; set; }
-        public string? EngineCapacity { get; set; }
-        public string? fuelType { get; set; }
-        public int? Owner { get; set; }
+        public string Producer { get; set; }
+        public string Model { get; set; }
+        public string ProduceDate { get; set; }
+        public int Mileage { get; set; }
+        public string Vin { get; set; }
+        public string EngineNumber { get; set; }
+        public string RegistrationNumber { get; set; }
+        public int EnginePower { get; set; }
+        public string EngineCapacity { get; set; }
+        public string fuelType { get; set; }
+        public int Owner { get; set; }
     }
 
     public class EditVehicleOb
     {
-        public int? id { get; set; }
-        public string? ProduceDate { get; set; }
-        public int? Mileage { get; set; }
-        public string? EngineNumber { get; set; }
-        public string? RegistrationNumber { get; set; }
-        public int? EnginePower { get; set; }
-        public string? EngineCapacity { get; set; }
+        public int id { get; set; }
+        public string ProduceDate { get; set; }
+        public int Mileage { get; set; }
+        public string EngineNumber { get; set; }
+        public string RegistrationNumber { get; set; }
+        public int EnginePower { get; set; }
+        public string EngineCapacity { get; set; }
     }
 }

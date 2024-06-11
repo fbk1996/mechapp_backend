@@ -1,4 +1,5 @@
-﻿using MechAppBackend.Data;
+﻿using MechAppBackend.AppSettings;
+using MechAppBackend.Data;
 using MechAppBackend.Helpers;
 using MechAppBackend.Models;
 using MySql.Data.MySqlClient;
@@ -57,10 +58,11 @@ namespace MechAppBackend.features
                             vin = v.Vin,
                             engineNumber = v.EngineNumber,
                             registrationNumber = v.RegistrationNumber,
-                            enginePower = v.EnginePower,
+                            enginePower = (int)v.EnginePower,
                             engineCapacity = v.EngineCapacity,
                             fuelType = v.FuelType
-                        }),
+                        })
+                        .FirstOrDefault(),
                     client = (orderClientOb)_context.Users
                         .Where(u => u.Id == o.ClientId)
                         .Select(u => new orderClientOb
@@ -71,7 +73,7 @@ namespace MechAppBackend.features
                             email = u.Email,
                             phone = u.Phone,
                             nip = u.Nip
-                        }),
+                        }).FirstOrDefault(),
                     clientDiagnose = o.ClientDiagnose,
                     status = o.Status,
                     startDate = o.StartDate,
@@ -112,7 +114,7 @@ namespace MechAppBackend.features
                                     grossUnitPrice = es.GrossUnitPrice,
                                     totalPrice = es.TotalPrice
                                 }).ToList()
-                        }),
+                        }).FirstOrDefault(),
                     checklist = (ChecklistOb)_context.CheckLists
                         .Where(c => c.OrderId == o.Id)
                         .Select(c => new ChecklistOb
@@ -138,7 +140,7 @@ namespace MechAppBackend.features
                             engineDescription = c.EngineDescription,
                             electricSystemStatus = c.ElectricSystemStatus,
                             electricSystemDescription = c.ElectricSystemDescription
-                        })
+                        }).FirstOrDefault()
                 }).ToList();
 
                 return orders;
@@ -190,10 +192,10 @@ namespace MechAppBackend.features
                             vin = v.Vin,
                             engineNumber = v.EngineNumber,
                             registrationNumber = v.RegistrationNumber,
-                            enginePower = v.EnginePower,
+                            enginePower = (int)v.EnginePower,
                             engineCapacity = v.EngineCapacity,
                             fuelType = v.FuelType
-                        }),
+                        }).FirstOrDefault(),
                     client = (orderClientOb)_context.Users
                         .Where(u => u.Id == o.ClientId)
                         .Select(u => new orderClientOb
@@ -204,7 +206,7 @@ namespace MechAppBackend.features
                             email = u.Email,
                             phone = u.Phone,
                             nip = u.Nip
-                        }),
+                        }).FirstOrDefault(),
                     clientDiagnose = o.ClientDiagnose,
                     status = o.Status,
                     startDate = o.StartDate,
@@ -245,7 +247,7 @@ namespace MechAppBackend.features
                                     grossUnitPrice = es.GrossUnitPrice,
                                     totalPrice = es.TotalPrice
                                 }).ToList()
-                        }),
+                        }).FirstOrDefault(),
                     checklist = (ChecklistOb)_context.CheckLists
                         .Where(c => c.OrderId == o.Id)
                         .Select(c => new ChecklistOb
@@ -271,7 +273,7 @@ namespace MechAppBackend.features
                             engineDescription = c.EngineDescription,
                             electricSystemStatus = c.ElectricSystemStatus,
                             electricSystemDescription = c.ElectricSystemDescription
-                        })
+                        }).FirstOrDefault()
                 }).ToList();
 
                 // Filtering orders based on the status provided
@@ -338,10 +340,10 @@ namespace MechAppBackend.features
                             vin = v.Vin,
                             engineNumber = v.EngineNumber,
                             registrationNumber = v.RegistrationNumber,
-                            enginePower = v.EnginePower,
+                            enginePower = (int)v.EnginePower,
                             engineCapacity = v.EngineCapacity,
                             fuelType = v.FuelType
-                        }),
+                        }).FirstOrDefault(),
                         client = (orderClientOb)_context.Users
                         .Where(u => u.Id == o.ClientId)
                         .Select(u => new orderClientOb
@@ -352,7 +354,7 @@ namespace MechAppBackend.features
                             email = u.Email,
                             phone = u.Phone,
                             nip = u.Nip
-                        }),
+                        }).FirstOrDefault(),
                         clientDiagnose = o.ClientDiagnose,
                         status = o.Status,
                         startDate = o.StartDate,
@@ -393,7 +395,7 @@ namespace MechAppBackend.features
                                     grossUnitPrice = es.GrossUnitPrice,
                                     totalPrice = es.TotalPrice
                                 }).ToList()
-                        }),
+                        }).FirstOrDefault(),
                         checklist = (ChecklistOb)_context.CheckLists
                         .Where(c => c.OrderId == o.Id)
                         .Select(c => new ChecklistOb
@@ -419,7 +421,7 @@ namespace MechAppBackend.features
                             engineDescription = c.EngineDescription,
                             electricSystemStatus = c.ElectricSystemStatus,
                             electricSystemDescription = c.ElectricSystemDescription
-                        })
+                        }).FirstOrDefault()
                     });
 
                 return order;
@@ -473,8 +475,18 @@ namespace MechAppBackend.features
             if (string.IsNullOrEmpty(order.clientDiagnose))
                 return "no_client_diagnose";
 
+            DateTime checkStartDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            DateTime checkEndDate = checkStartDate.AddMonths(1).AddDays(-1);
+
             try
             {
+                var count = _context.Orders
+                    .Count(o => o.StartDate >= checkStartDate && o.StartDate <= checkEndDate);
+
+                if (count >= appdata.ordersAmount)
+                    return "max_order_reached";
+
+
                 // Create a new Order object and populate it with the provided data
                 Order newOrder = new Order
                 {

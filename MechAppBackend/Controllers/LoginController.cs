@@ -1,4 +1,5 @@
-﻿using MechAppBackend.Conns;
+﻿using MechAppBackend.AppSettings;
+using MechAppBackend.Conns;
 using MechAppBackend.Data;
 using MechAppBackend.Helpers;
 using MechAppBackend.Models;
@@ -52,6 +53,11 @@ namespace MechAppBackend.Controllers
             try
             {   //get user from database
                 var user = _context.Users.FirstOrDefault(u => u.Email == login.email);
+
+                var subscriptionCheckDate = DateTime.Now;
+
+                if (subscriptionCheckDate < appdata.endDate)
+                    return new JsonResult(new { result = "no_subscription_active" });
 
                 if (user == null) return new JsonResult(new { result = "bad_login" });
                 //create combined password

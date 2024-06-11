@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Linq.Expressions;
 using MechAppBackend.Security;
+using MechAppBackend.features;
 
 namespace MechAppBackend.Controllers
 {
@@ -17,11 +18,13 @@ namespace MechAppBackend.Controllers
     {
         MechAppContext _context;
         CheckCookieToken cookieToken;
+        departments departmentsController;
 
         public DepartmentsController(MechAppContext context)
         {
             _context = context;
             cookieToken = new CheckCookieToken(context);
+            departmentsController = new departments(context);
         }
 
         /// <summary>
@@ -62,17 +65,7 @@ namespace MechAppBackend.Controllers
             try
             {
                 // Query the database to get a list of departments along with their detailed information
-                var departments = _context.Departments
-                    .Select(department => new
-                    {
-                        id = department.Id,
-                        name = department.Name,
-                        description = department.Description,
-                        address = department.Address,
-                        postcode = department.Postcode,
-                        city = department.City,
-                        membersCount = _context.UsersDepartments.Count(ud => ud.Id == department.Id)
-                    });
+                var departments = departmentsController.GetDepartments();
 
                 // Return the departments and their details in JSON format
                 return new JsonResult(new
