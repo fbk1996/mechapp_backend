@@ -56,8 +56,7 @@ namespace MechAppBackend.Controllers
 
                 var subscriptionCheckDate = DateTime.Now;
 
-                if (subscriptionCheckDate < appdata.endDate)
-                    return new JsonResult(new { result = "no_subscription_active" });
+                bool isSubscriptionActive = subscriptionCheckDate > appdata.endDate;
 
                 if (user == null) return new JsonResult(new { result = "bad_login" });
                 //create combined password
@@ -114,7 +113,8 @@ namespace MechAppBackend.Controllers
                     result = "loggedIn",
                     isFirstLogin = _isFirstLogin,
                     isDeleted = _isDeleted,
-                    appRole = _appRole
+                    appRole = _appRole,
+                    isSubscriptionActive = isSubscriptionActive
                 });
             }
             catch (MySqlException ex) //on any error with mysql commands

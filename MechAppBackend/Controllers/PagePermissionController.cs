@@ -53,6 +53,8 @@ namespace MechAppBackend.Controllers
 
             try
             {
+                if (_page == "profile")
+                    return new JsonResult(new { result = "permission_granted" });
                 // Check if the user is authorized to view the page
                 if (roles.isAuthorized(_cookieValue, _page, "view"))
                     return new JsonResult(new { result = "permission_granted" });
@@ -67,6 +69,55 @@ namespace MechAppBackend.Controllers
             }
 
             return new JsonResult(new {result =  resultBuilder.ToString() });
+        }
+
+        /// <summary>
+        /// HTTP GET endpoint for retrieving the sidebar permissions for the current user.
+        /// </summary>
+        /// <returns>JSON result containing the result status and the sidebar permissions</returns>
+        [HttpGet("sidebarPerms")]
+        public IActionResult GetSidebarPermissions()
+        {
+            StringBuilder resultBuilder = new StringBuilder();
+
+            string _cookieValue = string.Empty;
+            // Check for session token in cookies
+            if (Request.Cookies["sessionToken"] != null)
+            {
+                _cookieValue = Request.Cookies["sessionToken"];
+            }
+            else return new JsonResult(new { result = "no_auth" });
+            // Validate session token
+            if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
+            // Refresh the cookie expiration
+            DateTime expireCookie = DateTime.Now.AddHours(2);
+
+            CookieOptions cookieOptions = new CookieOptions
+            {
+                Expires = expireCookie
+            };
+
+            Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            try
+            {
+                // Get the sidebar permissions for the current user
+                sidebarPermissionsOb perms = roles.getSidebarPermissions(_cookieValue);
+
+                return new JsonResult(new
+                {
+                    result = "done",
+                    permissions = perms
+                });
+            }
+            catch (MySqlException ex)
+            {
+                // Log the exception and return an error result
+                resultBuilder.Clear().Append("error");
+                Logger.SendException("MechApp", "PagePermissionController", "GetSidebarPermissions", ex);
+            }
+
+            return new JsonResult(new {result = resultBuilder.ToString()});
         }
     }
 }

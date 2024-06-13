@@ -17,12 +17,14 @@ namespace MechAppBackend.features
         /// Retrieves a list of all services.
         /// </summary>
         /// <returns>A list of service objects, each containing the ID, name, duration, price, and active status of a service.</returns>
-        public List<serviceOb> GetServices()
+        public List<serviceOb> GetServices(int _pageSize, int offset)
         {
             try
             {
                 // Query the database for all services
                 var serviceList = _context.Services
+                    .Skip(offset)
+                    .Take(_pageSize)
                     .Select(s => new serviceOb
                     {
                         id = Convert.ToInt32(s.Id),
@@ -52,7 +54,14 @@ namespace MechAppBackend.features
             try
             {
                 // Query the database for the service
-                var service = (serviceOb)_context.Services.Where(s => s.Id == id);
+                var service = (serviceOb)_context.Services.Where(s => s.Id == id).Select(s => new serviceOb
+                {
+                    id = (int)s.Id,
+                    name = s.Name,
+                    duration = s.Duration,
+                    price = s.Price,
+                    isActive = s.IsActive
+                }).FirstOrDefault();
                 // If the service doesn't exist, return an object with an ID of -1
                 if (service == null)
                     return new serviceOb
@@ -60,7 +69,7 @@ namespace MechAppBackend.features
                         id = -1
                     };
                 // Return the service
-                return service;
+                return (serviceOb)service;
             }
             catch (MySqlException ex)
             {

@@ -15,20 +15,24 @@ namespace MechAppBackend.Controllers
         MechAppContext _context;
         services serviceController;
         CheckCookieToken cookieToken;
+        logs logsController;
 
         public ServiceController(MechAppContext context)
         {
             _context = context;
             cookieToken = new CheckCookieToken(context);
             serviceController = new services(context);
+            logsController = new logs(context);
         }
 
         /// <summary>
         /// HTTP GET endpoint for getting all services.
+        /// <param name="_pageSize">The number of logs to return per page.</param>
+        /// <param name="_currentPage">The current page number.</param>
         /// </summary>
         /// <returns>JSON result containing the result status and services</returns>
         [HttpGet]
-        public IActionResult GetServices()
+        public IActionResult GetServices(int _pageSize, int _currentPage)
         {
             StringBuilder resultBuilder = new StringBuilder();
 
@@ -51,10 +55,14 @@ namespace MechAppBackend.Controllers
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            int offset = ((_currentPage - 1) * _pageSize);
+
             try
             {
                 // Get all services
-                var services = serviceController.GetServices();
+                var services = serviceController.GetServices(_pageSize, offset);
+
+                logsController.AddLog(_cookieValue, "Pobranie listy usług");
                 // Return the services in a JSON result
                 return new JsonResult(new
                 {
@@ -108,6 +116,9 @@ namespace MechAppBackend.Controllers
 
                 if (service.id == -1)
                     return new JsonResult(new { result = "error" });
+
+                logsController.AddLog(_cookieValue, $"Pobranie szczegółów usługi {service.name}");
+
                 //return service ob
                 return new JsonResult(new
                 {
@@ -159,6 +170,8 @@ namespace MechAppBackend.Controllers
                 //attempt to add service
                 string result = serviceController.AddService(service);
 
+                logsController.AddLog(_cookieValue, $"Dodanie usługi {service.name}");
+
                 resultBuilder.Append(result);
             }
             catch (MySqlException ex)
@@ -205,6 +218,8 @@ namespace MechAppBackend.Controllers
                 // Attempt to edit the service
                 string result = serviceController.EditService(service);
 
+                logsController.AddLog(_cookieValue, $"Edycja usługi {service.name}");
+
                 resultBuilder.Append(result);
             }
             catch (MySqlException ex)
@@ -248,6 +263,7 @@ namespace MechAppBackend.Controllers
 
             try
             {
+                logsController.AddLog(_cookieValue, $"Usunięcie usługi {_context.Services.Where(s => s.Id == id).Select(s => s.Name).FirstOrDefault()}");
                 // Attempt to delete the service
                 string result = serviceController.DeleteService(id);
 
@@ -296,6 +312,7 @@ namespace MechAppBackend.Controllers
 
             try
             {
+                logsController.AddLog(_cookieValue, $"Usunięcie uslug: {_context.Services.Where(s => ids.Contains((int)s.Id)).Select(s => s.Name).ToString()}");
                 // Attempt to delete the services
                 string result = serviceController.DeleteServices(ids);
 

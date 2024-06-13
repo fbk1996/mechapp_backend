@@ -16,12 +16,14 @@ namespace MechAppBackend.features
         /// The GetLogs method retrieves all logs from the database.
         /// </summary>
         /// <returns>A list of logs, each represented as a logsOb object</returns>
-        public List<logsOb> GetLogs()
+        public List<logsOb> GetLogs(int _pageSize, int offset)
         {
             try
             {
                 // Query the Logs table and select each log as a logsOb object
                 var logsDb = _context.Logs
+                    .Skip(offset)
+                    .Take(_pageSize)
                     .Select(l => new logsOb
                     {
                         id = Convert.ToInt32(l.Id),
@@ -34,8 +36,7 @@ namespace MechAppBackend.features
                                 lastname = u.Lastname
                             }).FirstOrDefault(),
                         date = l.Date,
-                        action = l.Action,
-                        description = l.Description
+                        action = l.Action
                     }).ToList();
                 // Return the list of logs
                 return logsDb;
@@ -55,7 +56,7 @@ namespace MechAppBackend.features
         /// <param name="_action">The action performed by the user</param>
         /// <param name="_description">The description of the action</param>
         /// <returns>Returns "log_added" if the log was added successfully, otherwise "error"</returns>
-        public string AddLog(string _cookieToken, string _action, string _description)
+        public string AddLog(string _cookieToken, string _action)
         {
             try
             {
@@ -76,8 +77,7 @@ namespace MechAppBackend.features
                 {
                     UserId = sessionToken.UserId,
                     Date = startLog,
-                    Action = _action,
-                    Description = _description
+                    Action = _action
                 });
                 // Calculate the date for log retention
                 var deleteRetention = DateTime.Now.AddDays(-(int)appSettings.LogsRetention);

@@ -19,12 +19,14 @@ namespace MechAppBackend.Controllers
         MechAppContext _context;
         CheckCookieToken cookieToken;
         departments departmentsController;
+        logs logsController;
 
         public DepartmentsController(MechAppContext context)
         {
             _context = context;
             cookieToken = new CheckCookieToken(context);
             departmentsController = new departments(context);
+            logsController = new logs(context);
         }
 
         /// <summary>
@@ -36,10 +38,12 @@ namespace MechAppBackend.Controllers
         /// Responses:
         /// - "done": Successfully retrieved the list of departments along with their detailed information.
         /// - "error": Returned in case of a database exception during the operation.
+        /// <param name="_pageSize">The number of logs to return per page.</param>
+        /// <param name="_currentPage">The current page number.</param>
         /// </summary>
         /// <returns>JsonResult containing a list of departments and their details, or an error message</returns>
         [HttpGet]
-        public IActionResult GetDepartments()
+        public IActionResult GetDepartments(int _pageSize, int _currentPage)
         {
             StringBuilder resultBuilder = new StringBuilder();
 
@@ -62,16 +66,31 @@ namespace MechAppBackend.Controllers
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            int offset = ((_currentPage - 1) * _pageSize);
+
             try
             {
                 // Query the database to get a list of departments along with their detailed information
-                var departments = departmentsController.GetDepartments();
+                var departmentsList = _context.Departments
+                    .Skip(offset)
+                    .Take(_pageSize)
+                    .Select(d => new departmentOb
+                    {
+                        id = Convert.ToInt32(d.Id),
+                        name = d.Name,
+                        description = d.Description,
+                        address = d.Address,
+                        postcode = d.Postcode,
+                        city = d.City
+                    }).ToList();
+
+                logsController.AddLog(_cookieValue, "Pobranie listy oddziałów");
 
                 // Return the departments and their details in JSON format
                 return new JsonResult(new
                 {
                     result = "done",
-                    departments = departments
+                    departments = departmentsList
                 });
             }
             catch (MySqlException ex)
@@ -136,6 +155,8 @@ namespace MechAppBackend.Controllers
                 // Return 'not_found' if the department does not exist
                 if (department == null)
                     return new JsonResult(new { result = "not_found" });
+
+                logsController.AddLog(_cookieValue, $"Pobranie szczegółów oddziału {department.Name}");
 
                 // Return the department details in JSON format
                 return new JsonResult(new
@@ -213,6 +234,8 @@ namespace MechAppBackend.Controllers
                         isAttachedToDepartment = _context.UsersDepartments
                                                         .Any(ud => ud.UserId == user.Id && ud.DepartmentId == id)
                     }).ToList();
+
+                logsController.AddLog(_cookieValue, $"Pobranie listy użytkowników należących do oddziału {_context.Departments.Where(d => d.Id == id).Select(d => d.Name).FirstOrDefault()}");
 
                 // Return the list of users
                 return new JsonResult(new
@@ -308,6 +331,8 @@ namespace MechAppBackend.Controllers
                     City = dep.city.Trim()
                 };
 
+                logsController.AddLog(_cookieValue, $"Dodanie oddziału {dep.name}");
+
                 _context.Departments.Add(newDepartment);
                 _context.SaveChanges();
 
@@ -402,6 +427,8 @@ namespace MechAppBackend.Controllers
                 department.City = dep.city.Trim();
                 department.Postcode = dep.postcode.Trim();
 
+                logsController.AddLog(_cookieValue, $"Edycja oddziału {dep.name}");
+
                 // Save changes to the database
                 _context.SaveChanges();
 
@@ -495,7 +522,7 @@ namespace MechAppBackend.Controllers
                 {
                     _context.UsersDepartments.Remove(_context.UsersDepartments.FirstOrDefault(ud => ud.UserId == user && ud.DepartmentId == links.id));
                 }
-
+                logsController.AddLog(_cookieValue, "Dodanie użytkowników do oddziału");
                 // Save changes to the database
                 _context.SaveChanges();
 
@@ -626,7 +653,7 @@ namespace MechAppBackend.Controllers
                     {
                         userdb.IsDeleted = 0;
                     }
-
+                    logsController.AddLog(_cookieValue, $"Dodanie konta użytkownika {userdb.Name} {userdb.Lastname} do oddziału!");
                     _context.SaveChanges();
 
 
@@ -655,6 +682,8 @@ namespace MechAppBackend.Controllers
                         AppRole = "Employee",
                         IsFirstLogin = 1
                     };
+
+                    logsController.AddLog(_cookieValue, $"Dodanie konta użytkownika {newUser.Name} {newUser.Lastname} do oddziału!");
 
                     _context.Users.Add(newUser);
                     _context.SaveChanges();
@@ -726,6 +755,7 @@ namespace MechAppBackend.Controllers
 
             try
             {
+                logsController.AddLog(_cookieValue, $"Usunięcie oddziału: {_context.Departments.Where(d => d.Id == id).Select(d => d.Name).FirstOrDefault()}");
                 // Remove the department and its user associations from the database
                 _context.Departments.RemoveRange(_context.Departments.Where(d => d.Id == id));
                 _context.UsersDepartments.RemoveRange(_context.UsersDepartments.Where(ud => ud.DepartmentId == id));
@@ -789,6 +819,8 @@ namespace MechAppBackend.Controllers
 
             try
             {
+                logsController.AddLog(_cookieValue, $"Usunięcie oddziałów: {_context.Departments.Where(d => ids.Contains((int)d.Id)).Select(d => d.Name).ToString()}");
+
                 // Remove the departments and their user associations from the database
                 _context.Departments.RemoveRange(_context.Departments.Where(d => ids.Contains(Convert.ToInt32(d.Id))));
                 _context.UsersDepartments.RemoveRange(_context.UsersDepartments.Where(ud => ids.Contains(Convert.ToInt32(ud.DepartmentId))));

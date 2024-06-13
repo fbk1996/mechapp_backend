@@ -1,4 +1,5 @@
 ﻿using MechAppBackend.Data;
+using MechAppBackend.features;
 using MechAppBackend.Helpers;
 using MechAppBackend.Models;
 using Microsoft.AspNetCore.Http;
@@ -15,11 +16,13 @@ namespace MechAppBackend.Controllers
     {
         MechAppContext _context;
         CheckCookieToken cookieToken;
+        logs logsController;
 
         public RolesController (MechAppContext context)
         {
             _context = context;
             cookieToken = new CheckCookieToken(context);
+            logsController = new logs(context);
         }
 
         /// <summary>
@@ -30,10 +33,12 @@ namespace MechAppBackend.Controllers
         /// Responses:
         /// - "done": Successfully retrieved the list of roles along with their member counts.
         /// - "error": Returned in case of a database exception during the operation.
+        /// <param name="_pageSize">The number of logs to return per page.</param>
+        /// <param name="_currentPage">The current page number.</param>
         /// </summary>
         /// <returns>JsonResult containing a list of roles and their member counts, or an error message</returns>
         [HttpGet]
-        public IActionResult GetRoles()
+        public IActionResult GetRoles(int _pageSize, int _currentPage)
         {
             StringBuilder resultBuilder = new StringBuilder();
 
@@ -56,17 +61,23 @@ namespace MechAppBackend.Controllers
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            int offset = ((_currentPage - 1) * _pageSize);
+
             try
             {
                 // Query the database to get a list of roles along with their member counts
                 var roles = _context.Roles
                     .Where(r => r.Name.ToLower() != "root")
+                    .Skip(offset)
+                    .Take(_pageSize)
                     .Select(item => new
                     {
                         id = item.Id,
                         name = item.Name,
                         membersCount = _context.UsersRoles.Count(ur => ur.RoleId == item.Id)
                     }).ToList();
+
+                logsController.AddLog(_cookieValue, "Pobranie listy ról");
 
                 // Return the roles and their details in JSON format
                 return new JsonResult(new
@@ -147,7 +158,7 @@ namespace MechAppBackend.Controllers
                     {"services", new Dictionary<string, bool> {{"view", false}, { "edit", false }, { "add", false}, { "delete", false} } },
                     {"warehouse", new Dictionary<string, bool> {{"view", false}, { "edit", false}, { "add", false}, { "delete", false} } },
                     {"demands", new Dictionary<string, bool> {{"view", false}, { "edit", false}, { "add", false}, { "delete", false} } },
-                    {"adminPanel", new Dictionary<string, bool> {{"view", false}, { "edit", false} } },
+                    {"prices", new Dictionary<string, bool> {{"view", false}, { "edit", false} } },
                     {"logs", new Dictionary<string, bool> {{"view", false}} }
                 };
                 // Deserialize role permissions from the database
@@ -162,6 +173,9 @@ namespace MechAppBackend.Controllers
                         permissionStructure[parts[0]][parts[1]] = true;
                     }
                 }
+
+                logsController.AddLog(_cookieValue, $"Pobranie szczegółów roli {role.Name}");
+
                 // Return role details and permissions in JSON format
                 return new JsonResult(new
                 {
@@ -252,6 +266,8 @@ namespace MechAppBackend.Controllers
                     Permissions = JsonConvert.SerializeObject(role.permissions)
                 };
 
+                logsController.AddLog(_cookieValue, $"Dodanie roli {role.name}");
+
                 _context.Roles.Add(newRole);
                 _context.SaveChanges();
 
@@ -330,7 +346,7 @@ namespace MechAppBackend.Controllers
                 // Update the role's permissions
                 roleDb.Permissions = JsonConvert.SerializeObject(role.permissions);
                 _context.SaveChanges();
-
+                logsController.AddLog(_cookieValue, $"Edycja roli {roleDb.Name}");
                 // Indicate successful role editing
                 resultBuilder.Append("role_edited");
             }
@@ -390,6 +406,8 @@ namespace MechAppBackend.Controllers
 
             try
             {
+                logsController.AddLog(_cookieValue, $"Usunięcie roli {_context.Roles.Where(r => r.Id == id).Select(r => r.Name).FirstOrDefault()}");
+
                 // Remove the role and its associations with users from the database
                 _context.Roles.RemoveRange(_context.Roles.Where(r => r.Id == id));
                 _context.UsersRoles.RemoveRange(_context.UsersRoles.Where(ur => ur.RoleId == id));
@@ -454,6 +472,8 @@ namespace MechAppBackend.Controllers
 
             try
             {
+                logsController.AddLog(_cookieValue, $"Usunięcie ról: {_context.Roles.Where(r => ids.Contains((int)r.Id)).Select(r => r.Name).ToString()}");
+
                 // Remove the roles and their associations with users from the database
                 _context.Roles.RemoveRange(_context.Roles.Where(r => ids.Contains(Convert.ToInt32(r.Id))));
                 _context.UsersRoles.RemoveRange(_context.UsersRoles.Where(ur => ids.Contains(Convert.ToInt32(ur.Id))));

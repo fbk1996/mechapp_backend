@@ -17,6 +17,7 @@ namespace MechAppBackend.Controllers
         CheckCookieToken cookieToken;
         vehicles vehicleController;
         orders ordersController;
+        logs logsController;
 
         public ProfileController(MechAppContext context)
         {
@@ -24,6 +25,7 @@ namespace MechAppBackend.Controllers
             cookieToken = new CheckCookieToken(context);
             vehicleController = new vehicles(context);
             ordersController = new orders(context);
+            logsController = new logs(context);
         }
 
         /// <summary>
@@ -85,6 +87,9 @@ namespace MechAppBackend.Controllers
 
                 if (user == null)
                     return new JsonResult(new { result = "error" });
+
+                logsController.AddLog(_cookieValue, $"Pobranie danych użytkownika {user.Name} {user.Lastname}");
+
                 // Return the user data if everything is valid
                 return new JsonResult(new
                 {
@@ -180,6 +185,10 @@ namespace MechAppBackend.Controllers
                         fuelType = v.FuelType
                     })
                     .ToList();
+
+                logsController.AddLog(_cookieValue, $"Pobranie listy pojazdów użytkownika {_context.Users.Where(u => u.Id == token.UserId).Select(u => u.Name).FirstOrDefault()} " +
+                    $"{_context.Users.Where(u => u.Id == token.UserId).Select(u => u.Lastname).FirstOrDefault()}");
+
                 // Return the list of vehicles if found
                 return new JsonResult(new
                 {
@@ -250,10 +259,13 @@ namespace MechAppBackend.Controllers
                 //Fetch user data from database using the session token
                 var sessionToken = _context.UsersTokens.FirstOrDefault(st => st.Token == _cookieValue);
 
-                if (sessionToken != null)
+                if (sessionToken == null)
                     return new JsonResult(new { result = "error" });
                 //Retrieve orders matching the status for the user
                 var orders = ordersController.GetClientOrders(_status, (int)sessionToken.UserId);
+
+                logsController.AddLog(_cookieValue, $"Pobranie listy zleceń użytkownika {_context.Users.Where(u => u.Id == sessionToken.UserId).Select(u => u.Name).FirstOrDefault()} " +
+                    $"{_context.Users.Where(u => u.Id == sessionToken.UserId).Select(u => u.Lastname).FirstOrDefault()}");
 
                 return new JsonResult(new
                 {
@@ -326,6 +338,9 @@ namespace MechAppBackend.Controllers
 
                 if (order.id == -1)
                     return new JsonResult(new { result = "error" });
+                DateTime logsOrderDate = (DateTime)order.startDate;
+                logsController.AddLog(_cookieValue, $"Pobranie szczegółów zlecenia o nr {order.id}/{logsOrderDate.ToString("yyyy")}");
+
                 // Return the detailed information of the order
                 return new JsonResult(new
                 {
@@ -420,6 +435,8 @@ namespace MechAppBackend.Controllers
                     vehicle.Mileage, vehicle.Vin, vehicle.EngineNumber, vehicle.RegistrationNumber, vehicle.EnginePower, vehicle.EngineCapacity,
                     vehicle.fuelType, Convert.ToInt32(user.Id));
 
+                logsController.AddLog(_cookieValue, $"Dodanie pojazdu użytkownika {user.Name} {user.Lastname}");
+
                 resultBuilder.Append(_addResult);
             }
             catch (MySqlException ex)
@@ -465,6 +482,13 @@ namespace MechAppBackend.Controllers
                 // Attempt to edit the vehicle
                 string _editResult = vehicleController.EditVehicle(vehicle.id, vehicle.ProduceDate, vehicle.Mileage, vehicle.EngineNumber,
                     vehicle.RegistrationNumber, vehicle.EnginePower, vehicle.EngineCapacity);
+
+                var user = _context.Users.FirstOrDefault(u => u.Id == _context.UsersVehicles.Where(v => v.Id == vehicle.id).Select(v => v.Owner).FirstOrDefault());
+
+                if (user == null)
+                    return new JsonResult(new { result = "error" });
+
+                logsController.AddLog(_cookieValue, $"Edycja pojazdu użytkownika {user.Name} {user.Lastname}");
 
                 resultBuilder.Append(_editResult);
             }
@@ -531,6 +555,8 @@ namespace MechAppBackend.Controllers
                 user.Icon = edit.image;
                 // Save the changes to the database
 
+                logsController.AddLog(_cookieValue, $"Edycja profilu użytkownika {user.Name} {user.Lastname}");
+
                 _context.SaveChanges();
 
                 resultBuilder.Append("profile_edited");
@@ -579,6 +605,15 @@ namespace MechAppBackend.Controllers
                 // Attempt to change the order status to 2 (accepted)
                 string chStatus = ordersController.ChangeOrderStatus(id, 2);
 
+                var order = _context.Orders.FirstOrDefault(o => o.Id == id);
+
+                if (order == null)
+                    return new JsonResult(new { result = "error" });
+
+                DateTime logsStartDate = (DateTime)order.StartDate;
+
+                logsController.AddLog(_cookieValue, $"Akceptacja kosztorysu zlecenia {order.Id}/{logsStartDate.ToString("yyyy")}");
+
                 resultBuilder.Append(chStatus);
             }
             catch (MySqlException ex)
@@ -624,6 +659,15 @@ namespace MechAppBackend.Controllers
             {
                 // Attempt to change the order status to 3 (refused)
                 string chStatus = ordersController.ChangeOrderStatus(id, 3);
+
+                var order = _context.Orders.FirstOrDefault(o => o.Id == id);
+
+                if (order == null)
+                    return new JsonResult(new { result = "error" });
+
+                DateTime logsStartDate = (DateTime)order.StartDate;
+
+                logsController.AddLog(_cookieValue, $"Odrzucenie kosztorysu zlecenia {order.Id}/{logsStartDate.ToString("yyyy")}");
 
                 resultBuilder.Append(chStatus);
             }
@@ -698,6 +742,9 @@ namespace MechAppBackend.Controllers
                     return new JsonResult(new { result = "error" });
                 // Update the user's email
                 user.Email = email.newEmail;
+
+                logsController.AddLog(_cookieValue, $"Zmiana adresu email użytkownika {user.Name} {user.Lastname}");
+
                 // Save the changes to the database
                 _context.SaveChanges();
 
@@ -772,6 +819,8 @@ namespace MechAppBackend.Controllers
                 // Hash the combined password and salt
                 user.Password = hashes.GenerateSHA512Hash(combinedPassword);
                 user.Salt = salt;
+
+                logsController.AddLog(_cookieValue, $"Zmiana hasła użytkownika {user.Name} {user.Lastname}");
                 // Save the changes to the database
                 _context.SaveChanges();
 
@@ -836,6 +885,8 @@ namespace MechAppBackend.Controllers
                     return new JsonResult(new { result = "error" });
                 // Update the user's phone number
                 user.Phone = phone.phone;
+
+                logsController.AddLog(_cookieValue, $"Zmiana numeru telefonu użytkownika {user.Name} {user.Lastname}");
                 // Save the changes to the database
                 _context.SaveChanges();
 
@@ -897,6 +948,8 @@ namespace MechAppBackend.Controllers
                 _context.UsersTokens.RemoveRange(_context.UsersTokens.Where(ur => ur.UserId == user.Id));
                 // Mark the user as deleted
                 user.IsDeleted = 1;
+
+                logsController.AddLog(_cookieValue, $"Usunięcie konta użytkownika {user.Name} {user.Lastname}");
                 // Save the changes to the database
                 _context.SaveChanges();
                 // If an error occurs, log it and return an error response
@@ -943,8 +996,15 @@ namespace MechAppBackend.Controllers
 
             try
             {
+                var user = _context.Users.FirstOrDefault(u => u.Id == _context.UsersVehicles.Where(v => v.Id == id).Select(v => v.Owner).FirstOrDefault());
+
+                if (user == null)
+                    return new JsonResult(new { result = "error" });
+
                 // Attempt to delete the vehicle
                 string _deleteResult = vehicleController.DeleteVehicle(id);
+
+                logsController.AddLog(_cookieValue, $"Usunięcie pojazdu użytkownika {user.Name} {user.Lastname}");
 
                 resultBuilder.Append(_deleteResult);
             }

@@ -19,11 +19,13 @@ namespace MechAppBackend.Controllers
     {
         MechAppContext _context;
         CheckCookieToken cookieToken;
+        logs logsControlller;
 
         public UsersController (MechAppContext context)
         {
             _context = context;
             cookieToken = new CheckCookieToken(context);
+            logsControlller = new logs(context);
         }
 
         /// <summary>
@@ -43,9 +45,11 @@ namespace MechAppBackend.Controllers
         /// <param name="name">The filter string for user names.</param>
         /// <param name="departmentIds">The comma-separated list of department IDs.</param>
         /// <param name="rolesIds">The comma-separated list of role IDs.</param>
+        /// <param name="_pageSize">The number of logs to return per page.</param>
+        /// <param name="_currentPage">The current page number.</param>
         /// <returns>JsonResult containing the list of filtered users or an error message</returns>
         [HttpGet]
-        public IActionResult GetUsers(string? name, string? departmentIds, string? rolesIds)
+        public IActionResult GetUsers(string? name, string? departmentIds, string? rolesIds, int _pageSize, int _currentPage)
         {
             StringBuilder resultBuilder = new StringBuilder();
 
@@ -72,6 +76,8 @@ namespace MechAppBackend.Controllers
             List<long>? depIds = !string.IsNullOrEmpty(departmentIds) ? departmentIds.Split(',').Select(id => Convert.ToInt64(id)).ToList() : new List<long>();
             List<long>? rolIds = !string.IsNullOrEmpty(rolesIds) ? rolesIds.Split(',').Select(id => Convert.ToInt64(id)).ToList() : new List<long>();
 
+            int offset = ((_currentPage - 1) * _pageSize);
+
             try
             {
                 List<User> users = new List<User>();
@@ -95,7 +101,7 @@ namespace MechAppBackend.Controllers
                 // Get filtered users
                 users = query.ToList();
 
-                var usersData = users.Select(u => new
+                var usersData = users.Skip(offset).Take(_pageSize).Select(u => new
                 {
                     id = u.Id,
                     name = u.Name,
@@ -104,6 +110,8 @@ namespace MechAppBackend.Controllers
                     phone = u.Phone,
                     departments = users.Where(u => u.UsersDepartments.Any(ur => ur.Id == u.Id)).ToList(),
                 }).ToList();
+
+                logsControlller.AddLog(_cookieValue, "Pobranie listy użytkowników");
 
                 // Return the users list
                 return new JsonResult(new
@@ -179,6 +187,8 @@ namespace MechAppBackend.Controllers
                 var user = _context.Users.FirstOrDefault(u => u.Id == id);
                 if (user == null)
                     return new JsonResult(new { result = "error" });
+
+                logsControlller.AddLog(_cookieValue, $"Pobranie szczegółów użytkownika {user.Name} {user.Lastname}");
 
                 // Return the detailed information of the user
                 return new JsonResult(new
@@ -272,6 +282,8 @@ namespace MechAppBackend.Controllers
                     isAttachedToUser = _context.UsersDepartments.Any(ud => ud.UserId == id && ud.DepartmentId == d.Id)
                 });
 
+                logsControlller.AddLog(_cookieValue, $"Pobranie powizań użytkownika {user.Name} {user.Lastname}");
+
                 // Return the department links information
                 return new JsonResult(new
                 {
@@ -340,6 +352,8 @@ namespace MechAppBackend.Controllers
 
                 if (user == null)
                     return new JsonResult(new { result = "error" });
+
+                logsControlller.AddLog(_cookieValue, $"Pobranie szczegółów użytkownika {user.Name} {user.Lastname}");
                 // Return detailed information of the user
                 return new JsonResult(new
                 {
@@ -556,6 +570,8 @@ namespace MechAppBackend.Controllers
 
                 _context.SaveChanges();
 
+                logsControlller.AddLog(_cookieValue, $"Dodanie użytkownika {user.names}");
+
                 resultBuilder.Append("user_created");
             }
             catch (MySqlException ex) // Log exception and return 'error'
@@ -705,8 +721,8 @@ namespace MechAppBackend.Controllers
                 {
                     _context.UsersRoles.Remove(_context.UsersRoles.FirstOrDefault(ur => ur.UserId == userdb.Id && ur.RoleId == role));
                 }
-                
 
+                logsControlller.AddLog(_cookieValue, $"Edycja użytkownika {userdb.Name} {userdb.Lastname}");
                 _context.SaveChanges();
 
                 resultBuilder.Append("user_edited");
@@ -794,6 +810,9 @@ namespace MechAppBackend.Controllers
                 }
                 // Save changes to the database
                 _context.SaveChanges();
+
+                logsControlller.AddLog(_cookieValue, $"Edycja powiązań użytkownika {_context.Users.Where(u => u.Id == links.id).Select(u => u.Name).FirstOrDefault()} " +
+                    $"{_context.Users.Where(u => u.Id == links.id).Select(u => u.Lastname).FirstOrDefault()}");
                 // Indicate successful update of department links
                 resultBuilder.Append("departments_added");
             }
@@ -860,7 +879,7 @@ namespace MechAppBackend.Controllers
 
                 // Mark the user as deleted
                 user.IsDeleted = 1;
-
+                logsControlller.AddLog(_cookieValue, $"Usunięcie użytkownika {user.Name} {user.Lastname}");
                 // Remove user's role and department associations
                 _context.UsersRoles.RemoveRange(_context.UsersRoles.Where(ur => ur.UserId == id));
                 _context.UsersDepartments.RemoveRange(_context.UsersDepartments.Where(ur => ur.UserId == id));
@@ -937,7 +956,7 @@ namespace MechAppBackend.Controllers
                 {
                     user.IsDeleted = 1;
                 }
-
+                logsControlller.AddLog(_cookieValue, "Usunięcie użytkowników");
                 // Remove users' roles and department associations
                 _context.UsersRoles.RemoveRange(_context.UsersRoles.Where(ur => ids.Contains(Convert.ToInt32(ur.UserId))));
                 _context.UsersDepartments.RemoveRange(_context.UsersDepartments.Where(ud => ids.Contains(Convert.ToInt32(ud.UserId))));

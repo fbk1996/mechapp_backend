@@ -38,12 +38,12 @@ namespace MechAppBackend.features
         /// - Returns an empty list and logs the exception in case of a database error.
         /// </summary>
         /// <returns>List of 'orderOb' structured with detailed order, vehicle, client, and additional data.</returns>
-        public List<orderOb> getOrders()
+        public List<orderOb> getOrders(int _pageSize, int offset)
         {
             try
             {
                 // Use LINQ to query the database and select orders with required details
-                var orders = _context.Orders.Select(o => new orderOb
+                var orders = _context.Orders.Skip(offset).Take(_pageSize).Select(o => new orderOb
                 {
                     id = Convert.ToInt32(o.Id),
                     vehicle = (vehicleOb)_context.UsersVehicles
