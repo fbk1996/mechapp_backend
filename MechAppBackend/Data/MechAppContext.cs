@@ -34,6 +34,7 @@ namespace MechAppBackend.Data
         public virtual DbSet<UsersToken> UsersTokens { get; set; } = null!;
         public virtual DbSet<UsersVehicle> UsersVehicles { get; set; } = null!;
         public virtual DbSet<ValidationCode> ValidationCodes { get; set; } = null!;
+        public virtual DbSet<Warehouse> Warehouses { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -437,6 +438,34 @@ namespace MechAppBackend.Data
                     .WithMany(p => p.ValidationCodes)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("ValidationCodes_ibfk_1");
+            });
+
+            modelBuilder.Entity<Warehouse>(entity =>
+            {
+                entity.ToTable("Warehouse");
+
+                entity.HasIndex(e => e.DepartmentId, "DepartmentID");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
+
+                entity.Property(e => e.Ean)
+                    .HasColumnType("text")
+                    .HasColumnName("EAN");
+
+                entity.Property(e => e.Name).HasColumnType("text");
+
+                entity.Property(e => e.PlaceNumber).HasColumnType("text");
+
+                entity.Property(e => e.Stand).HasColumnType("text");
+
+                entity.Property(e => e.UnitPrice).HasPrecision(10);
+
+                entity.HasOne(d => d.Department)
+                    .WithMany(p => p.Warehouses)
+                    .HasForeignKey(d => d.DepartmentId)
+                    .HasConstraintName("Warehouse_ibfk_1");
             });
 
             OnModelCreatingPartial(modelBuilder);

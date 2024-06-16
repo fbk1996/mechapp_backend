@@ -56,7 +56,7 @@ namespace MechAppBackend.Controllers
 
                 var subscriptionCheckDate = DateTime.Now;
 
-                bool isSubscriptionActive = subscriptionCheckDate > appdata.endDate;
+                bool isSubscriptionActive = subscriptionCheckDate < appdata.endDate;
 
                 if (user == null) return new JsonResult(new { result = "bad_login" });
                 //create combined password

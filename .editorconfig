@@ -1,0 +1,43 @@
+﻿[*.cs]
+
+# CS1030: Dyrektywa #warning
+dotnet_diagnostic.CS1030.severity = none
+
+# CS8600: Konwertowanie literału null lub możliwej wartości null na nienullowalny typ.
+dotnet_diagnostic.CS8600.severity = none
+
+# CS8604: Możliwy argument odwołania o wartości null.
+dotnet_diagnostic.CS8604.severity = none
+
+# CS8602: Wyłuskanie odwołania, które może mieć wartość null.
+dotnet_diagnostic.CS8602.severity = none
+
+# CS0472: Wynik wyrażenia jest zawsze taki sam, ponieważ wartość tego typu nigdy nie jest równa wartości „null”
+dotnet_diagnostic.CS0472.severity = none
+
+# IDE0044: Dodaj modyfikator tylko do odczytu
+dotnet_diagnostic.IDE0044.severity = none
+
+# IDE0090: Użyj operatora „new(...)”
+dotnet_diagnostic.IDE0090.severity = none
+
+# IDE0056: Użyj operatora indeksu
+dotnet_diagnostic.IDE0056.severity = none
+
+# IDE1006: Style nazewnictwa
+dotnet_diagnostic.IDE1006.severity = none
+
+# IDE0037: Użyj nazwy wywnioskowanego elementu członkowskiego
+dotnet_diagnostic.IDE0037.severity = none
+
+# IDE0071: Uprość interpolację
+dotnet_diagnostic.IDE0071.severity = none
+
+# CS8603: Możliwe zwrócenie odwołania o wartości null.
+dotnet_diagnostic.CS8603.severity = none
+
+# CS8629: Typ wartości dopuszczający wartość null może być równy null.
+dotnet_diagnostic.CS8629.severity = none
+
+# IDE0052: Usuń nieodczytywane składowe prywatne
+dotnet_diagnostic.IDE0052.severity = none

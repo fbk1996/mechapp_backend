@@ -16,12 +16,14 @@ namespace MechAppBackend.Controllers
         MechAppContext _context;
         logs logsController;
         CheckCookieToken cookieToken;
+        CheckRoles roles;
 
         public LogsController(MechAppContext context)
         {
             _context = context;
             logsController = new logs(context);
             cookieToken = new CheckCookieToken(context);
+            roles = new CheckRoles(context);
         }
         /// <summary>
         /// HTTP GET endpoint for retrieving logs with pagination.
@@ -52,6 +54,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "logs", "view"))
+                return new JsonResult(new { result = "no_permission" });
 
             int offset = ((_currentPage - 1) * _pageSize);
 
@@ -102,6 +107,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "logs", "view"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {

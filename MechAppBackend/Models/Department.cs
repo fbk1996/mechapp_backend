@@ -9,6 +9,7 @@ namespace MechAppBackend.Models
         {
             Orders = new HashSet<Order>();
             UsersDepartments = new HashSet<UsersDepartment>();
+            Warehouses = new HashSet<Warehouse>();
         }
 
         public long Id { get; set; }
@@ -20,5 +21,6 @@ namespace MechAppBackend.Models
 
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<UsersDepartment> UsersDepartments { get; set; }
+        public virtual ICollection<Warehouse> Warehouses { get; set; }
     }
 }

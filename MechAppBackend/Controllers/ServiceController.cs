@@ -16,6 +16,7 @@ namespace MechAppBackend.Controllers
         services serviceController;
         CheckCookieToken cookieToken;
         logs logsController;
+        CheckRoles roles;
 
         public ServiceController(MechAppContext context)
         {
@@ -23,6 +24,7 @@ namespace MechAppBackend.Controllers
             cookieToken = new CheckCookieToken(context);
             serviceController = new services(context);
             logsController = new logs(context);
+            roles = new CheckRoles(context);
         }
 
         /// <summary>
@@ -54,6 +56,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "services", "view"))
+                return new JsonResult(new { result = "no_permission" });
 
             int offset = ((_currentPage - 1) * _pageSize);
 
@@ -108,6 +113,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "services", "view"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -165,6 +173,9 @@ namespace MechAppBackend.Controllers
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            if (!roles.isAuthorized(_cookieValue, "services", "add"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 //attempt to add service
@@ -212,6 +223,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "services", "edit"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -261,6 +275,9 @@ namespace MechAppBackend.Controllers
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            if (!roles.isAuthorized(_cookieValue, "services", "delete"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 logsController.AddLog(_cookieValue, $"Usunięcie usługi {_context.Services.Where(s => s.Id == id).Select(s => s.Name).FirstOrDefault()}");
@@ -309,6 +326,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "services", "delete"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {

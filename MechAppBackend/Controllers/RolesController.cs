@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
+using System.Data;
 using System.Text;
 
 namespace MechAppBackend.Controllers
@@ -17,12 +18,14 @@ namespace MechAppBackend.Controllers
         MechAppContext _context;
         CheckCookieToken cookieToken;
         logs logsController;
+        CheckRoles roles;
 
         public RolesController (MechAppContext context)
         {
             _context = context;
             cookieToken = new CheckCookieToken(context);
             logsController = new logs(context);
+            roles = new CheckRoles(context);
         }
 
         /// <summary>
@@ -60,6 +63,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "roles", "view"))
+                return new JsonResult(new { result = "no_permission" });
 
             int offset = ((_currentPage - 1) * _pageSize);
 
@@ -134,6 +140,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "roles", "view"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -251,6 +260,9 @@ namespace MechAppBackend.Controllers
             if (!Validators.CheckLength(role.name, 50))
                 return new JsonResult(new { result = "name_too_long" });
 
+            if (!roles.isAuthorized(_cookieValue, "roles", "add"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 // Check if a role with the same name already exists
@@ -334,6 +346,9 @@ namespace MechAppBackend.Controllers
             if (role.id == null || role.id == -1)
                 return new JsonResult(new { result = "error" });
 
+            if (!roles.isAuthorized(_cookieValue, "roles", "edit"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 // Retrieve the role from the database
@@ -399,6 +414,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "roles", "delete"))
+                return new JsonResult(new { result = "no_permission" });
 
             // Validate the role ID
             if (id == null || id == -1)
@@ -469,6 +487,9 @@ namespace MechAppBackend.Controllers
             // Validate the list of IDs
             if (ids.Count == 0)
                 return new JsonResult(new { result = "error" });
+
+            if (!roles.isAuthorized(_cookieValue, "roles", "delete"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {

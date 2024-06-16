@@ -20,12 +20,14 @@ namespace MechAppBackend.Controllers
         MechAppContext _context;
         CheckCookieToken cookieToken;
         logs logsControlller;
+        CheckRoles roles;
 
         public UsersController (MechAppContext context)
         {
             _context = context;
             cookieToken = new CheckCookieToken(context);
             logsControlller = new logs(context);
+            roles = new CheckRoles(context);
         }
 
         /// <summary>
@@ -77,6 +79,9 @@ namespace MechAppBackend.Controllers
             List<long>? rolIds = !string.IsNullOrEmpty(rolesIds) ? rolesIds.Split(',').Select(id => Convert.ToInt64(id)).ToList() : new List<long>();
 
             int offset = ((_currentPage - 1) * _pageSize);
+
+            if (!roles.isAuthorized(_cookieValue, "users", "view"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -174,6 +179,9 @@ namespace MechAppBackend.Controllers
             if (id == null || id == -1)
                 return new JsonResult(new { result = "error" });
 
+            if (!roles.isAuthorized(_cookieValue, "users", "view"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 // Retrieve the list of all roles
@@ -267,6 +275,9 @@ namespace MechAppBackend.Controllers
             if (id == null || id == -1)
                 return new JsonResult(new { result = "error" });
 
+            if (!roles.isAuthorized(_cookieValue, "users", "view") || !roles.isAuthorized(_cookieValue, "users", "links"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 // Find the specific user 
@@ -344,6 +355,9 @@ namespace MechAppBackend.Controllers
             // Validate the email address
             if (string.IsNullOrEmpty(email))
                 return new JsonResult(new { result = "error" });
+
+            if (!roles.isAuthorized(_cookieValue, "users", "view"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -448,6 +462,9 @@ namespace MechAppBackend.Controllers
             // Validate email format
             if (!string.IsNullOrEmpty(user.email) && !Validators.ValidateEmail(user.email))
                 return new JsonResult(new { result = "bad_email_format" });
+
+            if (!roles.isAuthorized(_cookieValue, "users", "add"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -655,6 +672,9 @@ namespace MechAppBackend.Controllers
             if (!string.IsNullOrEmpty(user.email) && !Validators.ValidateEmail(user.email))
                 return new JsonResult(new { result = "bad_email_format" });
 
+            if (!roles.isAuthorized(_cookieValue, "users", "edit"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 // Find the user to be edited
@@ -781,6 +801,10 @@ namespace MechAppBackend.Controllers
             if (links.id == null || links.id == -1)
                 return new JsonResult(new { result = "error" });
             // Validate the user ID
+
+            if (!roles.isAuthorized(_cookieValue, "users", "links"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 // Retrieve current department links for the user
@@ -870,6 +894,9 @@ namespace MechAppBackend.Controllers
             if (id == null || id == -1)
                 return new JsonResult(new { result = "error" });
 
+            if (!roles.isAuthorized(_cookieValue, "users", "delete"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 // Find the specific user
@@ -945,6 +972,9 @@ namespace MechAppBackend.Controllers
 
             // Parse the list of IDs and convert to integers
             List<int> ids = idsList.Split(',').Select(id => Convert.ToInt32(id)).ToList();
+
+            if (!roles.isAuthorized(_cookieValue, "users", "delete"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {

@@ -18,6 +18,7 @@ namespace MechAppBackend.Controllers
         vehicles vehicleController;
         orders ordersController;
         logs logsController;
+        CheckRoles roles;
 
         public ProfileController(MechAppContext context)
         {
@@ -26,6 +27,7 @@ namespace MechAppBackend.Controllers
             vehicleController = new vehicles(context);
             ordersController = new orders(context);
             logsController = new logs(context);
+            roles = new CheckRoles(context);
         }
 
         /// <summary>
@@ -74,6 +76,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "profile", "edit"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -160,6 +165,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "profile", "edit"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -254,6 +262,9 @@ namespace MechAppBackend.Controllers
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            if (!roles.isAuthorized(_cookieValue, "profile", "edit"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 //Fetch user data from database using the session token
@@ -330,6 +341,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "profile", "edit"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -418,6 +432,9 @@ namespace MechAppBackend.Controllers
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            if (!roles.isAuthorized(_cookieValue, "profile", "edit"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 // Retrieve user and add vehicle
@@ -477,6 +494,9 @@ namespace MechAppBackend.Controllers
             // Update the session token cookie
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            if (!roles.isAuthorized(_cookieValue, "profile", "edit"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 // Attempt to edit the vehicle
@@ -533,6 +553,9 @@ namespace MechAppBackend.Controllers
             // Validate the phone number format
             if (!string.IsNullOrEmpty(edit.phone) && !Validators.CheckPhone(edit.phone, edit.country.ToUpper()))
                 return new JsonResult(new { result = "phone_format" });
+
+            if (!roles.isAuthorized(_cookieValue, "profile", "edit"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -600,6 +623,9 @@ namespace MechAppBackend.Controllers
             // Update the session token cookie
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            if (!roles.isAuthorized(_cookieValue, "profile", "edit"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 // Attempt to change the order status to 2 (accepted)
@@ -654,6 +680,9 @@ namespace MechAppBackend.Controllers
             };
             // Update the session token cookie
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "profile", "edit"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -722,6 +751,9 @@ namespace MechAppBackend.Controllers
 
             if (email.newEmail != email.repeatEmail)
                 return new JsonResult(new { result = "email_not_match" });
+
+            if (!roles.isAuthorized(_cookieValue, "profile", "emailChange"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -800,6 +832,9 @@ namespace MechAppBackend.Controllers
             if (pass.password != pass.repeatpassword)
                 return new JsonResult(new { result = "password_not_matching" });
 
+            if (!roles.isAuthorized(_cookieValue, "profile", "passChange"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 // Get the session token from the database
@@ -871,6 +906,9 @@ namespace MechAppBackend.Controllers
             if (!Validators.CheckPhone(phone.phone, phone.country))
                 return new JsonResult(new { result = "phone_format" });
 
+            if (!roles.isAuthorized(_cookieValue, "profile", "edit"))
+                return new JsonResult(new { result = "no_permission" });
+
             try
             {
                 // Get the session token from the database
@@ -929,6 +967,9 @@ namespace MechAppBackend.Controllers
             };
             // Update the session token cookie
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "profile", "delAccount"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {
@@ -993,6 +1034,9 @@ namespace MechAppBackend.Controllers
             };
             // Update the session token cookie
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "profile", "edit"))
+                return new JsonResult(new { result = "no_permission" });
 
             try
             {

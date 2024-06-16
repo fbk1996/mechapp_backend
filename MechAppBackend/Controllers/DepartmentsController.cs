@@ -20,6 +20,7 @@ namespace MechAppBackend.Controllers
         CheckCookieToken cookieToken;
         departments departmentsController;
         logs logsController;
+        CheckRoles roles;
 
         public DepartmentsController(MechAppContext context)
         {
@@ -27,6 +28,7 @@ namespace MechAppBackend.Controllers
             cookieToken = new CheckCookieToken(context);
             departmentsController = new departments(context);
             logsController = new logs(context);
+            roles = new CheckRoles(context);
         }
 
         /// <summary>
@@ -65,6 +67,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "departments", "view"))
+                return new JsonResult(new { result = "no_permission" });
 
             int offset = ((_currentPage - 1) * _pageSize);
 
@@ -143,6 +148,9 @@ namespace MechAppBackend.Controllers
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            if (!roles.isAuthorized(_cookieValue, "departments", "view"))
+                return new JsonResult(new { result = "no_permission" });
+
             // Validate the department ID
             if (id == null || id == -1)
                 return new JsonResult(new { result = "error" });
@@ -217,6 +225,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "departments", "view") || !roles.isAuthorized(_cookieValue, "departments", "links"))
+                return new JsonResult(new { result = "no_permission" });
 
             // Validate the department ID
             if (id == null || id == -1)
@@ -300,6 +311,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "departments", "add"))
+                return new JsonResult(new { result = "no_permission" });
 
             // Validate required fields
             if (string.IsNullOrEmpty(dep.name))
@@ -396,6 +410,9 @@ namespace MechAppBackend.Controllers
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            if (!roles.isAuthorized(_cookieValue, "departments", "edit"))
+                return new JsonResult(new { result = "no_permission" });
+
             // Validate the department ID
             if (dep.id == null || dep.id == -1)
                 return new JsonResult(new { result = "error" });
@@ -485,6 +502,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "departments", "links"))
+                return new JsonResult(new { result = "no_permission" });
 
             // Validate the department ID
             if (links.id == null || links.id == -1)
@@ -583,6 +603,9 @@ namespace MechAppBackend.Controllers
             };
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "departments", "links") || !roles.isAuthorized(_cookieValue, "users", "add"))
+                return new JsonResult(new { result = "no_permission" });
 
             // Validate required fields
             if (string.IsNullOrEmpty(user.names))
@@ -749,6 +772,9 @@ namespace MechAppBackend.Controllers
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            if (!roles.isAuthorized(_cookieValue, "departments", "delete"))
+                return new JsonResult(new { result = "no_permission" });
+
             // Validate the department ID
             if (id == null || id == -1)
                 return new JsonResult(new { result = "error" });
@@ -759,6 +785,7 @@ namespace MechAppBackend.Controllers
                 // Remove the department and its user associations from the database
                 _context.Departments.RemoveRange(_context.Departments.Where(d => d.Id == id));
                 _context.UsersDepartments.RemoveRange(_context.UsersDepartments.Where(ud => ud.DepartmentId == id));
+                _context.Warehouses.RemoveRange(_context.Warehouses.Where(w => w.DepartmentId == id));
                 _context.SaveChanges();
 
                 // Indicate successful department deletion
@@ -814,6 +841,9 @@ namespace MechAppBackend.Controllers
 
             Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
 
+            if (!roles.isAuthorized(_cookieValue, "departments", "delete"))
+                return new JsonResult(new { result = "no_permission" });
+
             // Parse the ID list and convert to integers
             List<int> ids = idsList.Split(',').Select(id => Convert.ToInt32(id)).ToList();
 
@@ -824,6 +854,7 @@ namespace MechAppBackend.Controllers
                 // Remove the departments and their user associations from the database
                 _context.Departments.RemoveRange(_context.Departments.Where(d => ids.Contains(Convert.ToInt32(d.Id))));
                 _context.UsersDepartments.RemoveRange(_context.UsersDepartments.Where(ud => ids.Contains(Convert.ToInt32(ud.DepartmentId))));
+                _context.Warehouses.RemoveRange(_context.Warehouses.Where(w => ids.Contains((int)w.DepartmentId)));
                 _context.SaveChanges();
 
                 // Indicate successful deletion of departments
