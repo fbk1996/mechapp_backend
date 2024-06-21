@@ -25,6 +25,7 @@ namespace MechAppBackend.Data
         public virtual DbSet<EstimateService> EstimateServices { get; set; } = null!;
         public virtual DbSet<Log> Logs { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
+        public virtual DbSet<OrdersComplaint> OrdersComplaints { get; set; } = null!;
         public virtual DbSet<OrdersImage> OrdersImages { get; set; } = null!;
         public virtual DbSet<Role> Roles { get; set; } = null!;
         public virtual DbSet<Service> Services { get; set; } = null!;
@@ -161,7 +162,11 @@ namespace MechAppBackend.Data
 
                 entity.Property(e => e.GrossUnitPrice).HasPrecision(10);
 
+                entity.Property(e => e.IsOrdered).HasColumnName("isOrdered");
+
                 entity.Property(e => e.Name).HasColumnType("text");
+
+                entity.Property(e => e.SubmitFrom).HasColumnType("text");
 
                 entity.Property(e => e.TotalPrice).HasPrecision(10);
 
@@ -253,6 +258,24 @@ namespace MechAppBackend.Data
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.VehicleId)
                     .HasConstraintName("Orders_ibfk_2");
+            });
+
+            modelBuilder.Entity<OrdersComplaint>(entity =>
+            {
+                entity.HasIndex(e => e.OrderId, "OrderID");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Description).HasColumnType("text");
+
+                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+
+                entity.Property(e => e.SubmitDescription).HasColumnType("text");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrdersComplaints)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("OrdersComplaints_ibfk_1");
             });
 
             modelBuilder.Entity<OrdersImage>(entity =>

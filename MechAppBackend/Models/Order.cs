@@ -9,6 +9,7 @@ namespace MechAppBackend.Models
         {
             CheckLists = new HashSet<CheckList>();
             Estimates = new HashSet<Estimate>();
+            OrdersComplaints = new HashSet<OrdersComplaint>();
             OrdersImages = new HashSet<OrdersImage>();
         }
 
@@ -29,6 +30,7 @@ namespace MechAppBackend.Models
         public virtual UsersVehicle? Vehicle { get; set; }
         public virtual ICollection<CheckList> CheckLists { get; set; }
         public virtual ICollection<Estimate> Estimates { get; set; }
+        public virtual ICollection<OrdersComplaint> OrdersComplaints { get; set; }
         public virtual ICollection<OrdersImage> OrdersImages { get; set; }
     }
 }

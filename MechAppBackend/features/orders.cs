@@ -2,6 +2,7 @@
 using MechAppBackend.Data;
 using MechAppBackend.Helpers;
 using MechAppBackend.Models;
+using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using System.Linq;
 
@@ -38,12 +39,26 @@ namespace MechAppBackend.features
         /// - Returns an empty list and logs the exception in case of a database error.
         /// </summary>
         /// <returns>List of 'orderOb' structured with detailed order, vehicle, client, and additional data.</returns>
-        public List<orderOb> getOrders(int _pageSize, int offset)
+        public List<orderOb> getOrders(DateTime from, DateTime to, string name, List<long> depIds, int _pageSize, int offset)
         {
             try
             {
+
+                IQueryable<Order> query = _context.Orders;
+
+                if (from != null || to != null)
+                    query = query.Where(o => o.StartDate >= from && o.StartDate <= to);
+
+                if (!string.IsNullOrEmpty(name))
+                    query = query.Where(o => (_context.Users.Where(u => u.Id == o.ClientId).Select(u => u.Name).FirstOrDefault()).ToLower().Contains(name.ToLower().Trim()) ||
+                    (_context.Users.Where(u => u.Id == o.ClientId).Select(u => u.Lastname).FirstOrDefault()).ToLower().Contains(name.ToLower().Trim()) ||
+                    (_context.Users.Where(u => u.Id == o.ClientId).Select(u => u.Nip).FirstOrDefault()).Contains(name.Trim()));
+
+                if (depIds.Count != 0)
+                    query = query.Where(o => depIds.Contains(Convert.ToInt64(o.Department)));
+
                 // Use LINQ to query the database and select orders with required details
-                var orders = _context.Orders.Skip(offset).Take(_pageSize).Select(o => new orderOb
+                var ordersDb = query.Skip(offset).Take(_pageSize).Select(o => new orderOb
                 {
                     id = Convert.ToInt32(o.Id),
                     vehicle = (vehicleOb)_context.UsersVehicles
@@ -140,10 +155,20 @@ namespace MechAppBackend.features
                             engineDescription = c.EngineDescription,
                             electricSystemStatus = c.ElectricSystemStatus,
                             electricSystemDescription = c.ElectricSystemDescription
-                        }).FirstOrDefault()
+                        }).FirstOrDefault(),
+                    complaint = (orderComplaintsOb)_context.OrdersComplaints
+                            .Where(oc => oc.OrderId == o.Id)
+                            .Select(oc => new orderComplaintsOb
+                            {
+                                id = (int)oc.Id,
+                                orderID = (int)oc.OrderId,
+                                status = (int)oc.Status,
+                                description = oc.Description,
+                                submitDescription = oc.SubmitDescription
+                            }).FirstOrDefault()
                 }).ToList();
 
-                return orders;
+                return ordersDb;
             }
             catch (MySqlException ex)
             {
@@ -273,7 +298,17 @@ namespace MechAppBackend.features
                             engineDescription = c.EngineDescription,
                             electricSystemStatus = c.ElectricSystemStatus,
                             electricSystemDescription = c.ElectricSystemDescription
-                        }).FirstOrDefault()
+                        }).FirstOrDefault(),
+                    complaint = (orderComplaintsOb)_context.OrdersComplaints
+                            .Where(oc => oc.OrderId == o.Id)
+                            .Select(oc => new orderComplaintsOb
+                            {
+                                id = (int)oc.Id,
+                                orderID = (int)oc.OrderId,
+                                status = (int)oc.Status,
+                                description = oc.Description,
+                                submitDescription = oc.SubmitDescription
+                            }).FirstOrDefault()
                 }).ToList();
 
                 // Filtering orders based on the status provided
@@ -320,6 +355,9 @@ namespace MechAppBackend.features
         /// <returns>Returns a fully populated 'orderOb' object if successful, or an empty 'orderOb' object on failure.</returns>
         public orderOb GetOrderDetail(int _orderID)
         {
+            if (_orderID == -1)
+                return new orderOb() { id = -1 };
+
             try
             {
                 // Query the database to get the order and its related details based on the order ID
@@ -421,8 +459,18 @@ namespace MechAppBackend.features
                             engineDescription = c.EngineDescription,
                             electricSystemStatus = c.ElectricSystemStatus,
                             electricSystemDescription = c.ElectricSystemDescription
-                        }).FirstOrDefault()
-                    });
+                        }).FirstOrDefault(),
+                        complaint = (orderComplaintsOb)_context.OrdersComplaints
+                            .Where(oc => oc.OrderId == o.Id)
+                            .Select(oc => new orderComplaintsOb
+                            {
+                                id = (int)oc.Id,
+                                orderID = (int)oc.OrderId,
+                                status = (int)oc.Status,
+                                description = oc.Description,
+                                submitDescription = oc.SubmitDescription
+                            }).FirstOrDefault()
+            });
 
                 return order;
             }
@@ -434,6 +482,155 @@ namespace MechAppBackend.features
                 {
                     id = -1
                 };
+            }
+        }
+
+        /// <summary>
+        /// Wyszukuje części w magazynie na podstawie podanych kryteriów.
+        /// </summary>
+        /// <param name="id">Opcjonalny identyfikator części do wyszukania.</param>
+        /// <param name="ean">Opcjonalny kod EAN części do wyszukania.</param>
+        /// <param name="name">Opcjonalna nazwa części do wyszukania.</param>
+        /// <param name="departmentID">Identyfikator działu, w którym ma zostać przeprowadzone wyszukiwanie.</param>
+        /// <returns>
+        /// Listę części spełniających podane kryteria wyszukiwania. Każdy element listy zawiera szczegółowe informacje o części,
+        /// takie jak identyfikator, nazwa, kod EAN, ilość, cena jednostkowa, lokalizacja w magazynie oraz identyfikator działu.
+        /// </returns>
+        /// <remarks>
+        /// Metoda przeszukuje magazyn w poszukiwaniu części spełniających podane kryteria. Wyszukiwanie może być przeprowadzone
+        /// na podstawie identyfikatora, kodu EAN, nazwy części lub kombinacji tych kryteriów. Wyniki są filtrowane również na podstawie
+        /// przynależności do określonego działu. W przypadku wystąpienia wyjątku, metoda zwraca pustą listę i rejestruje wyjątek.
+        /// </remarks>
+        public List<SearchWarehouseItemDetailsOb> searchParts(int? id, string? ean, string? name, int departmentID)
+        {
+            try
+            {
+                List<SearchWarehouseItemDetailsOb> searchItems = new List<SearchWarehouseItemDetailsOb>();
+
+                IQueryable<Warehouse> warehouseItems = _context.Warehouses;
+
+                if (id != null || id != -1)
+                    warehouseItems = warehouseItems.Where(w => w.Id == id);
+
+                if (!string.IsNullOrEmpty(ean))
+                    warehouseItems = warehouseItems.Where(w => w.Ean.ToLower().Contains(ean.Trim().ToLower()));
+
+                if (!string.IsNullOrEmpty(name))
+                    warehouseItems = warehouseItems.Where(w => w.Name.ToLower().Contains(name.ToLower().Trim()));
+
+                warehouseItems = warehouseItems.Where(w => w.DepartmentId == departmentID);
+
+                var wareHouseitems = _context.Warehouses
+                    .AsNoTracking()
+                    .Select(w => new SearchWarehouseItemDetailsOb
+                    {
+                        id = (int)w.Id,
+                        name = w.Name,
+                        ean = w.Ean,
+                        amount = w.Amount,
+                        unitPrice = w.UnitPrice,
+                        stand = w.Stand,
+                        standPlace = w.PlaceNumber,
+                        departmentId = (int)w.DepartmentId,
+                        submitFrom = "warehouse"
+                    }).ToList();
+
+                if (wareHouseitems.Count != 0)
+                {
+                    foreach (var item in wareHouseitems)
+                    {
+                        searchItems.Add(item);
+                    }
+                }
+
+                return searchItems;
+            }
+            catch (MySqlException ex)
+            {
+                Logger.SendException("MechApp", "orders", "searchParts", ex);
+                return new List<SearchWarehouseItemDetailsOb>();
+            }
+        }
+
+        /// <summary>
+        /// Searches for services in the database that match the given name.
+        /// </summary>
+        /// <param name="name">The name or partial name of the service to search for.</param>
+        /// <returns>A list of services that match the search criteria. Each service includes its ID, name, duration, price, and active status.</returns>
+        /// <remarks>
+        /// This method performs a case-insensitive search for services whose names contain the provided string.
+        /// If an exception occurs during the database operation, it logs the exception and returns an empty list.
+        /// </remarks>
+        public List<serviceOb> searchServices (int? id, string? name)
+        {
+            try
+            {
+                // Query the database for services that match the search criteria.
+                // The search is case-insensitive and matches any part of the service name.
+                List<serviceOb> services = _context.Services
+                    .AsNoTracking()
+                    .Where(s => s.Name.ToLower().Contains(name.Trim().ToLower()) || s.Id == id)
+                    .Select(s => new serviceOb
+                    {
+                        id = (int)s.Id,
+                        name = s.Name,
+                        duration = s.Duration,
+                        price = s.Price,
+                        isActive = s.IsActive
+                    }).ToList();
+
+                return services; // Return the list of matching services.
+            }
+            catch (MySqlException ex)
+            {
+                // Log the exception if a database error occurs
+                Logger.SendException("MechApp", "orders", "searchServices", ex);
+                return new List<serviceOb>(); // Return an empty list in case of an exception
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the complaint details for a specific order.
+        /// </summary>
+        /// <param name="orderID">The ID of the order for which the complaint details are requested.</param>
+        /// <returns>
+        /// An <see cref="orderComplaintsOb"/> object containing the complaint details. If no complaint is found, returns an object with an ID of -1.
+        /// If a database error occurs, also returns an object with an ID of -1 and logs the exception.
+        /// </returns>
+        /// <remarks>
+        /// This method attempts to find a complaint associated with the given order ID. It uses Entity Framework's
+        /// AsNoTracking for a read-only query to improve performance. The method handles any <see cref="MySqlException"/>
+        /// by logging the exception and returning a default <see cref="orderComplaintsOb"/> object with an ID of -1.
+        /// </remarks>
+        public orderComplaintsOb GetComplaint(int orderID)
+        {
+            try
+            {
+                // Attempt to retrieve the complaint associated with the specified order ID.
+                // The query is performed without tracking changes to the retrieved entities (AsNoTracking) for performance optimization.
+                var complaint = (orderComplaintsOb)_context.OrdersComplaints
+                    .AsNoTracking()
+                    .Where(oc => oc.OrderId == orderID)
+                    .Select(oc => new orderComplaintsOb
+                    {
+                        id = (int)oc.Id,
+                        orderID = (int)oc.OrderId,
+                        status = (int)oc.Status,
+                        description = oc.Description,
+                        submitDescription = oc.SubmitDescription
+                    }).FirstOrDefault();
+
+                // If no complaint is found, return a default orderComplaintsOb object with an ID of -1.
+                if (complaint == null)
+                    return new orderComplaintsOb() { id = -1 };
+
+                return complaint;
+            }
+            catch (MySqlException ex)
+            {
+                // Log the exception and return a default orderComplaintsOb object with an ID of -1 in case of a database error.
+                Logger.SendException("MechApp", "orders", "GetComplaint", ex);
+                return new orderComplaintsOb() { id = -1 };
             }
         }
 
@@ -547,7 +744,7 @@ namespace MechAppBackend.features
             // Validate order ID and status
             if (_orderID == null || _orderID == -1)
                 return "error";
-            if (_status == null)
+            if (_status == null || _status == -1)
                 return "error";
 
             try
@@ -570,10 +767,9 @@ namespace MechAppBackend.features
 
                         smssender.SendSms("Szanowny kliencie! Zapraszamy po odbior samochodu!", _phone);
                     }
-                    else 
-                    {
-                        Sender.SendOrderReadyStatus("Samochód gotowy do odbioru!", user.Name, user.Lastname, user.Email);
-                    }
+
+                    Sender.SendOrderReadyStatus("Samochód gotowy do odbioru!", user.Name, user.Lastname, user.Email);
+
 
                     order.SendDoneNotification = 1;
                 }
@@ -658,7 +854,9 @@ namespace MechAppBackend.features
                         Ean = part.ean,
                         Amount = part.amount,
                         GrossUnitPrice = part.grossUnitPrice,
-                        TotalPrice = part.totalPrice
+                        TotalPrice = part.totalPrice,
+                        SubmitFrom = part.submitFrom,
+                        IsOrdered = 0
                     });
                 }
 
@@ -675,6 +873,53 @@ namespace MechAppBackend.features
                 }
                 // Save all changes to the database
                 _context.SaveChanges();
+
+                var order = _context.Orders.FirstOrDefault(o => o.Id == newEstimate.OrderId);
+
+                if (order == null)
+                    return "error";
+
+                var client = _context.Users.FirstOrDefault(u => u.Id == order.ClientId);
+
+                if (client == null) return "error";
+
+                if (!string.IsNullOrEmpty(client.Phone))
+                {
+                    string sendPhone = client.Phone.Replace("+", "").Replace("48", "");
+
+                    smssender.SendSms("Szanowny Kliencie! Kosztorys do twojego zlecenia został dodany. Szczegoly znajdziesz w wiadomosci email!", sendPhone);
+                }
+
+                var vehicle = _context.UsersVehicles.FirstOrDefault(v => v.Id == order.VehicleId);
+
+                if (vehicle == null)
+                    return "error";
+
+                DateTime startOrderDate = (DateTime)order.StartDate;
+
+                string mailParts = string.Empty;
+
+                foreach (var part in estimate.estimateParts)
+                {
+                    mailParts += @$"<div class='orders-cost-elem'>
+            <span class='paragraph-bold' style='width: 100%; text-align: left;'>EAN: {part.ean} | {part.name}</span>
+            <span class='paragraph' style='width: 100%; text-align: left;'>Ilość: {part.amount} | Cena jedn. {part.grossUnitPrice} PLN | Cena {part.totalPrice} PLN</span>
+        </div>";
+                }
+
+                string mailServices = string.Empty;
+
+                foreach (var service in estimate.estimateServices)
+                {
+                    mailServices += $@"<div class='orders-cost-elem'>
+            <span class='paragraph-bold' style='width: 100%; text-align: left;'>{service.name}</span>
+            <span class='paragraph' style='width: 100%; text-align: left;'>RWH: {service.rwhAmount} | Cena jedn. {service.grossUnitPrice} PLN | Cena {service.totalPrice} PLN</span>
+        </div>";
+                }
+
+                Sender.SendCreateEstimateMessage("Edycja kosztorysu zlecenia", client.Name, client.Lastname, $"{order.Id}/{startOrderDate.ToString("yyyy")}",
+                    vehicle.Producer, vehicle.Model, vehicle.RegistrationNumber, mailParts, mailServices, estimate.totalPartsPrice.ToString(), estimate.totalServicesPrice.ToString(),
+                    estimate.totalPrice.ToString(), client.Email);
 
                 return "estimate_added";
             }
@@ -769,7 +1014,8 @@ namespace MechAppBackend.features
                         Ean = part.ean,
                         Amount = part.amount,
                         GrossUnitPrice = part.grossUnitPrice,
-                        TotalPrice = part.totalPrice
+                        TotalPrice = part.totalPrice,
+                        SubmitFrom = part.submitFrom
                     });
                 }
 
@@ -839,6 +1085,53 @@ namespace MechAppBackend.features
                 }
                 // Commit all changes to the database
                 _context.SaveChanges();
+
+                var order = _context.Orders.FirstOrDefault(o => o.Id == estimateOb.OrderId);
+
+                if (order == null)
+                    return "error";
+
+                var client = _context.Users.FirstOrDefault(u => u.Id == order.ClientId);
+
+                if (client == null) return "error";
+
+                if (!string.IsNullOrEmpty(client.Phone))
+                {
+                    string sendPhone = client.Phone.Replace("+", "").Replace("48", "");
+
+                    smssender.SendSms("Szanowny Kliencie! Kosztorys do twojego zlecenia został edytowany. Szczegoly znajdziesz w wiadomosci email!", sendPhone);
+                }
+
+                var vehicle = _context.UsersVehicles.FirstOrDefault(v => v.Id == order.VehicleId);
+
+                if (vehicle == null)
+                    return "error";
+
+                DateTime startOrderDate = (DateTime)order.StartDate;
+
+                string mailParts = string.Empty;
+
+                foreach (var part in estimate.estimateParts)
+                {
+                    mailParts += @$"<div class='orders-cost-elem'>
+            <span class='paragraph-bold' style='width: 100%; text-align: left;'>EAN: {part.ean} | {part.name}</span>
+            <span class='paragraph' style='width: 100%; text-align: left;'>Ilość: {part.amount} | Cena jedn. {part.grossUnitPrice} PLN | Cena {part.totalPrice} PLN</span>
+        </div>";
+                }
+
+                string mailServices = string.Empty;
+
+                foreach (var service in estimate.estimateServices)
+                {
+                    mailServices += $@"<div class='orders-cost-elem'>
+            <span class='paragraph-bold' style='width: 100%; text-align: left;'>{service.name}</span>
+            <span class='paragraph' style='width: 100%; text-align: left;'>RWH: {service.rwhAmount} | Cena jedn. {service.grossUnitPrice} PLN | Cena {service.totalPrice} PLN</span>
+        </div>";
+                }
+
+                Sender.SendEditEstimateMessage("Edycja kosztorysu zlecenia", client.Name, client.Lastname, $"{order.Id}/{startOrderDate.ToString("yyyy")}",
+                    vehicle.Producer, vehicle.Model, vehicle.RegistrationNumber, mailParts, mailServices, estimate.totalPartsPrice.ToString(), estimate.totalServicesPrice.ToString(),
+                    estimate.totalPrice.ToString(), client.Email);
 
                 return "estimate_edited";
             }
@@ -998,6 +1291,189 @@ namespace MechAppBackend.features
                 return "error";
             }
         }
+
+        /// <summary>
+        /// Adds a new complaint for an order.
+        /// </summary>
+        /// <param name="complaint">An object containing the order ID and the complaint description.</param>
+        /// <returns>
+        /// A string indicating the result of the operation:
+        /// - "no_order_id" if the order ID is -1,
+        /// - "no_description" if the complaint description is null or empty,
+        /// - "exist" if a complaint for the given order ID already exists,
+        /// - "complaint_added" if the complaint was successfully added,
+        /// - "error" in case of a database error.
+        /// </returns>
+        /// <remarks>
+        /// This method checks if the provided order ID and description are valid. It then checks if a complaint for the given order ID
+        /// already exists in the database. If not, it adds a new complaint with a default status of 0. If any database errors occur,
+        /// the method logs the exception and returns "error".
+        /// </remarks>
+        public string AddComplaint(addOrderComplaintOb complaint)
+        {
+            if (complaint.orderId == -1)
+                return "no_order_id";
+            if (string.IsNullOrEmpty(complaint.description))
+                return "no_description";
+
+            try
+            {
+                var checkComplaint = _context.OrdersComplaints.FirstOrDefault(oc => oc.OrderId == complaint.orderId);
+
+                if (checkComplaint != null)
+                    return "exist";
+
+                _context.OrdersComplaints.Add(new OrdersComplaint
+                {
+                    OrderId = complaint.orderId,
+                    Description = complaint.description,
+                    Status = 0
+                });
+
+                _context.SaveChanges();
+
+                return "complaint_added";
+            }
+            catch (MySqlException ex)
+            {
+                Logger.SendException("MechApp", "orders", "AddComplaint", ex);
+                return "error";
+            }
+        }
+
+        /// <summary>
+        /// Initiates the complaint process for a given complaint ID.
+        /// </summary>
+        /// <param name="complaintID">The ID of the complaint to start processing. Default value is -1.</param>
+        /// <returns>
+        /// A string indicating the result of the operation:
+        /// - "no_id" if the complaint ID is -1,
+        /// - "error" if the complaint does not exist, or if there is a database error,
+        /// - "complaint_started" if the process is successfully initiated.
+        /// </returns>
+        /// <remarks>
+        /// This method updates the status of a complaint to indicate that the processing has started. It also sends an SMS to the client
+        /// associated with the complaint (if a phone number is available) and an email notification. The method handles any database errors
+        /// by logging the exception and returning an "error" message.
+        /// </remarks>
+        public string StartProcessComplaint(int complaintID = -1)
+        {
+            if (complaintID == -1)
+                return "no_id"; // Check if the provided complaint ID is valid.
+
+            try
+            {
+                // Retrieve the complaint from the database.
+                var complaint = _context.OrdersComplaints.FirstOrDefault(oc => oc.Id == complaintID);
+
+                if (complaint == null)
+                    return "error"; // Return error if the complaint does not exist.
+
+                complaint.Status = 1;// Update the complaint status to indicate processing has started.
+
+                _context.SaveChanges(); // Save changes to the database.
+
+                var order = _context.Orders.FirstOrDefault(o => o.Id == complaint.OrderId);  // Retrieve the order associated with the complaint.
+
+                if (order == null)
+                    return "error"; // Return error if the order does not exist.
+
+                var user = _context.Users.FirstOrDefault(u => u.Id == order.ClientId); // Retrieve the user (client) associated with the order.
+
+                if (user == null)
+                    return "error"; // Return error if the user does not exist.
+
+                if (!string.IsNullOrEmpty(user.Phone)) // Send an SMS notification to the user if a phone number is available.
+                {
+                    string sendPhone = user.Phone.Replace("+", "").Replace("48", "");
+
+                    smssender.SendSms("Szanowny kliencie twoje zgłoszenie reklamacji jest w trakcie rozpatrywania. Poinformujemy Ciebie o podjetej decyzji.", sendPhone);
+                }
+
+                DateTime orderStartDate = (DateTime)order.StartDate;
+                // Send an email notification to the user.
+                Sender.SendStartComplaintEmail("Reklamacja - rozpatrywanie", user.Name, user.Lastname, $"{order.Id}/{orderStartDate.ToString("yyyyy")}", user.Email);
+
+                return "complaint_started"; // Return success message.
+            }
+            catch (MySqlException ex) // Log any database errors and return an error message.
+            {
+                Logger.SendException("MechApp", "orders", "StartProcessComplaint", ex);
+                return "error";
+            }
+        }
+
+        /// <summary>
+        /// Submits the final decision for a complaint.
+        /// </summary>
+        /// <param name="complaint">An object containing the complaint ID, new status, and a description of the decision.</param>
+        /// <returns>
+        /// A string indicating the result of the operation:
+        /// - "no_id" if the complaint ID is -1,
+        /// - "no_status" if the complaint status is -1,
+        /// - "no_submit_description" if the decision description is null or empty,
+        /// - "error" if the complaint does not exist in the database, if there is a database error, or if related order or client information cannot be found,
+        /// - "complaint_submited" if the complaint decision is successfully submitted and notifications are sent.
+        /// </returns>
+        /// <remarks>
+        /// This method updates the status and decision description of a complaint based on the provided information. It also sends an SMS and an email to the client associated with the complaint, informing them of the decision. The method handles any database errors by logging the exception and returning an "error" message.
+        /// </remarks>
+        public string SubmitComplaint(submitOrderComplaintOb complaint)
+        {
+            if (complaint.id == -1)
+                return "no_id";
+            if (complaint.status == -1)
+                return "no_status";
+            if (string.IsNullOrEmpty(complaint.submitDescription))
+                return "no_submit_description";
+
+            try
+            {
+                // Retrieve the complaint from the database.
+                var comdb = _context.OrdersComplaints.FirstOrDefault(oc => oc.Id == complaint.id);
+
+                if (comdb == null)
+                    return "error";
+
+                // Update the complaint status and decision description.
+                comdb.Status = (short)complaint.status;
+                comdb.SubmitDescription = complaint.submitDescription;
+
+                _context.SaveChanges();
+
+                // Determine the status message for the email based on the complaint status.
+                string mailStatus = (complaint.status == 2) ? "pozytywnie" : "negatywnie";
+                // Retrieve the order associated with the complaint
+                var order = _context.Orders.FirstOrDefault(o => o.Id == comdb.OrderId);
+
+                if (order == null)
+                    return "error";
+                // Retrieve the client associated with the order.
+                var client = _context.Users.FirstOrDefault(u => u.Id == order.ClientId);
+
+                if (client == null)
+                    return "error";
+                // Send an SMS notification to the client if a phone number is available.
+                if (!string.IsNullOrEmpty(client.Phone))
+                {
+                    var sendPhone = client.Phone.Replace("+", "").Replace("48", "");
+
+                    smssender.SendSms($"Szanowny kliencie twoja reklamacja zostala rozpatrzona {mailStatus}. Szczegoly znajdziesz w wiadomosci email.", sendPhone);
+                }
+
+                DateTime orderStartDate = (DateTime)order.StartDate;
+                // Send an email notification to the client.
+                Sender.SendDecisionComplaintEmail("Reklamacja - decyzja", client.Name, client.Lastname, $"{order.Id}/{orderStartDate.ToString("yyyy")}", mailStatus, complaint.submitDescription, client.Email);
+
+                return "complaint_submited";
+            }
+            catch (MySqlException ex)
+            {
+                // Log any database errors and return an error message.
+                Logger.SendException("MechApp", "orders", "SubmitComplaint", ex);
+                return "error";
+            }
+        }
     }
 
     public class orderOb
@@ -1012,6 +1488,7 @@ namespace MechAppBackend.features
         public List<orderImageOb> images { get; set; }
         public estimateOb estimate { get; set; }
         public ChecklistOb checklist { get; set; }
+        public orderComplaintsOb complaint { get; set; }
     }
 
     public class orderClientOb
@@ -1074,6 +1551,7 @@ namespace MechAppBackend.features
         public float? amount { get; set; }
         public decimal? grossUnitPrice { get; set; }
         public decimal? totalPrice { get; set; }
+        public string? submitFrom { get; set; }
     }
 
     public class estimateServiceOb
@@ -1150,5 +1628,27 @@ namespace MechAppBackend.features
     {
         public int? id { get; set; }
         public string? image { get; set; }
+    }
+
+    public class orderComplaintsOb
+    {
+        public int? id { get; set; }
+        public int? orderID { get; set; }
+        public int? status { get; set; }
+        public string? description { get; set; }
+        public string? submitDescription { get; set; }
+    }
+
+    public class addOrderComplaintOb
+    {
+        public int? orderId { get; set; } = -1;
+        public string? description { get; set; }
+    }
+
+    public class submitOrderComplaintOb
+    {
+        public int? id { get; set; } = -1;
+        public int? status { get; set; } = -1;
+        public string? submitDescription { get; set; }
     }
 }

@@ -12,6 +12,8 @@ namespace MechAppBackend.Models
         public float? Amount { get; set; }
         public decimal? GrossUnitPrice { get; set; }
         public decimal? TotalPrice { get; set; }
+        public string? SubmitFrom { get; set; }
+        public short IsOrdered { get; set; }
 
         public virtual Estimate? Estimate { get; set; }
     }

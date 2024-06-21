@@ -2,6 +2,7 @@
 using MechAppBackend.Conns;
 using System.Net.Mail;
 using System.Net;
+using Google.Protobuf;
 
 namespace MechAppBackend.Helpers
 {
@@ -305,6 +306,55 @@ namespace MechAppBackend.Helpers
             catch (Exception ex)
             {
                 Logger.SendNormalException("mechapp", "SMTP SENDER", "ADD CLIENT", ex);
+            }
+        }
+
+        public static async void SendStartComplaintEmail(string _title, string _name, string _lastname, string _orderId, string _email)
+        {
+            if (string.IsNullOrEmpty(connections.smtpHost) || string.IsNullOrEmpty(connections.smtpUser) || string.IsNullOrEmpty(connections.smtpPassword)) return;
+
+            string title = EmailTemplates.SendComplaintStartTitle;
+            string message = EmailTemplates.SendComplaintStartMessage;
+
+            message = message.Replace("#title", _title).Replace("#name", _name).Replace("#lastname", _lastname).Replace("#orderID", _orderId);
+
+            using (MailMessage mail = new MailMessage())
+            {
+                mail.From = new MailAddress(connections.smtpUser);
+                mail.To.Add(_email);
+                mail.Subject = title;
+                mail.Body = message;
+                mail.IsBodyHtml = true;
+
+                using (SmtpClient smtp = smtpclient())
+                {
+                    await smtp.SendMailAsync(mail);
+                }
+            }
+        }
+
+        public static async void SendDecisionComplaintEmail(string _title, string _name, string _lastname, string _orderId, string _decision, string _description, string _email)
+        {
+            if (string.IsNullOrEmpty(connections.smtpHost) || string.IsNullOrEmpty(connections.smtpUser) || string.IsNullOrEmpty(connections.smtpPassword)) return;
+
+            string title = EmailTemplates.SendComplaintDecisionTitle;
+            string message = EmailTemplates.SendComplaintStartMessage;
+
+            message = message.Replace("#title", _title).Replace("#name", _name).Replace("#lastname", _lastname).Replace("#orderID", _orderId).Replace("#decision", _decision).Replace("#description", _description);
+            title = title.Replace("#decision", _decision);
+
+            using (MailMessage mail = new MailMessage())
+            {
+                mail.From = new MailAddress(connections.smtpUser);
+                mail.To.Add(_email);
+                mail.Subject = title;
+                mail.Body = message;
+                mail.IsBodyHtml = true;
+
+                using (SmtpClient smtp = smtpclient())
+                {
+                    await smtp.SendMailAsync(mail);
+                }
             }
         }
     }
