@@ -164,7 +164,8 @@ namespace MechAppBackend.features
                                 orderID = (int)oc.OrderId,
                                 status = (int)oc.Status,
                                 description = oc.Description,
-                                submitDescription = oc.SubmitDescription
+                                submitDescription = oc.SubmitDescription,
+                                complaintDate = oc.Date
                             }).FirstOrDefault()
                 }).ToList();
 
@@ -590,6 +591,52 @@ namespace MechAppBackend.features
         }
 
         /// <summary>
+        /// Searches for users in the database based on a provided search term.
+        /// </summary>
+        /// <param name="name">The search term used to find users. It can match any part of the user's name, last name, company name, email, NIP, or phone number.</param>
+        /// <returns>
+        /// A list of users that match the search criteria. Each user in the list includes their ID, name, last name, company name, phone number, NIP, and a flag indicating if the user is a company.
+        /// If a database error occurs, an empty list is returned and the exception is logged.
+        /// </returns>
+        /// <remarks>
+        /// This method performs a case-insensitive search across multiple fields to find users that match the provided search term.
+        /// The search includes the user's name, last name, company name, email, NIP, and phone number.
+        /// </remarks>
+        public List<ordersSearchUserOb> searchUsers(string? name)
+        {
+            if (string.IsNullOrEmpty(name))
+                return new List<ordersSearchUserOb>();
+            try
+            {
+                // Start with all users in the database.
+                IQueryable<User> users = _context.Users;
+                // If a name is provided, filter users by matching the search term against multiple fields.
+                if (!string.IsNullOrEmpty(name))
+                    users = users.Where(u => u.Name.ToLower().Contains(name.ToLower().Trim()) || u.Lastname.ToLower().Contains(name.ToLower().Trim()) || u.CompanyName.ToLower().Contains(name.ToLower().Trim()) ||
+                    u.Email.ToLower().Contains(name.ToLower().Trim()) || u.Nip.ToLower().Contains(name.ToLower().Trim()) || u.Phone.Contains(name.ToLower().Trim()));
+                // Project the filtered users into the ordersSearchUserOb format.
+                var usersList = users.AsNoTracking().Select(u => new ordersSearchUserOb
+                {
+                    id = (int)u.Id,
+                    name = u.Name,
+                    lastname = u.Lastname,
+                    companyName = u.CompanyName,
+                    phone = u.Phone,
+                    nip = u.Nip,
+                    isCompany = (!string.IsNullOrEmpty(u.Nip) && !string.IsNullOrEmpty(u.CompanyName)) ? true : false
+                }).ToList();
+
+                return usersList;
+            }
+            catch (MySqlException ex)
+            {
+                // Log the exception and return an empty list in case of a database error.
+                Logger.SendException("MechApp", "orders", "searchUsers", ex);
+                return new List<ordersSearchUserOb>();
+            }
+        }
+
+        /// <summary>
         /// Retrieves the complaint details for a specific order.
         /// </summary>
         /// <param name="orderID">The ID of the order for which the complaint details are requested.</param>
@@ -617,7 +664,8 @@ namespace MechAppBackend.features
                         orderID = (int)oc.OrderId,
                         status = (int)oc.Status,
                         description = oc.Description,
-                        submitDescription = oc.SubmitDescription
+                        submitDescription = oc.SubmitDescription,
+                        complaintDate = oc.Date
                     }).FirstOrDefault();
 
                 // If no complaint is found, return a default orderComplaintsOb object with an ID of -1.
@@ -1323,10 +1371,13 @@ namespace MechAppBackend.features
                 if (checkComplaint != null)
                     return "exist";
 
+                DateTime complaintDate = DateTime.Now;
+
                 _context.OrdersComplaints.Add(new OrdersComplaint
                 {
                     OrderId = complaint.orderId,
                     Description = complaint.description,
+                    Date = complaintDate,
                     Status = 0
                 });
 
@@ -1637,6 +1688,7 @@ namespace MechAppBackend.features
         public int? status { get; set; }
         public string? description { get; set; }
         public string? submitDescription { get; set; }
+        public DateTime? complaintDate { get; set; }
     }
 
     public class addOrderComplaintOb
@@ -1650,5 +1702,16 @@ namespace MechAppBackend.features
         public int? id { get; set; } = -1;
         public int? status { get; set; } = -1;
         public string? submitDescription { get; set; }
+    }
+
+    public class ordersSearchUserOb
+    {
+        public int? id { get; set; }
+        public string? name { get; set; }
+        public string? lastname { get; set; }
+        public string? companyName { get; set; }
+        public string? phone { get; set; }
+        public string? nip { get; set; }
+        public bool isCompany { get; set; }
     }
 }

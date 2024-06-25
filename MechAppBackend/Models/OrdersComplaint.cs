@@ -10,6 +10,7 @@ namespace MechAppBackend.Models
         public short? Status { get; set; }
         public string? Description { get; set; }
         public string? SubmitDescription { get; set; }
+        public DateTime Date { get; set; }
 
         public virtual Order? Order { get; set; }
     }

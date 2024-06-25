@@ -277,6 +277,37 @@ namespace MechAppBackend.Helpers
             }
         }
 
+        public static async void SendAddDeletedClientEmail(string _title, string _name, string _lastname, string _email)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(connections.smtpHost) || string.IsNullOrEmpty(connections.smtpUser) || string.IsNullOrEmpty(connections.smtpPassword)) return;
+
+                string _message = EmailTemplates.SendAddClientMessage;
+                string _mesTitle = EmailTemplates.SendAddClientMessageTitle;
+
+                _message = _message.Replace("#title", _title).Replace("#name", _name).Replace("#lastname", _lastname).Replace("#login", _email);
+
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.From = new MailAddress(connections.smtpUser);
+                    mail.To.Add(_email);
+                    mail.Subject = _mesTitle;
+                    mail.Body = _message;
+                    mail.IsBodyHtml = true;
+
+                    using (SmtpClient smtp = smtpclient())
+                    {
+                        await smtp.SendMailAsync(mail);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.SendNormalException("mechapp", "SMTP SENDER", "ADD CLIENT", ex);
+            }
+        }
+
         public static async void SendMailConfirmationtEmail(string _title, string _name, string _lastname, string _email, string _mess)
         {
             try

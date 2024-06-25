@@ -266,6 +266,8 @@ namespace MechAppBackend.Data
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
                 entity.Property(e => e.Description).HasColumnType("text");
 
                 entity.Property(e => e.OrderId).HasColumnName("OrderID");

@@ -3,6 +3,7 @@ using MechAppBackend.Data;
 using MechAppBackend.features;
 using MechAppBackend.Helpers;
 using MechAppBackend.Models;
+using MechAppBackend.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
@@ -530,6 +531,7 @@ namespace MechAppBackend.Controllers
                     {
                         Name = _name,
                         Lastname = _lastname,
+                        Password = hashes.GenerateSHA512Hash(_combinedPassword),
                         Email = user.email,
                         Nip = user.nip,
                         Phone = user.phone,
@@ -538,6 +540,7 @@ namespace MechAppBackend.Controllers
                         Address = user.address,
                         Color = user.color,
                         AppRole = "Employee",
+                        Salt = _salt,
                         IsFirstLogin = 1
                     });
 

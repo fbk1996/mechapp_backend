@@ -295,6 +295,62 @@ namespace MechAppBackend.Controllers
         }
 
         /// <summary>
+        /// Retrieves a specific order complaint based on the provided order ID.
+        /// </summary>
+        /// <param name="orderId">The ID of the order for which the complaint is being requested. If -1, indicates an error or invalid request.</param>
+        /// <returns>A JSON result indicating the outcome of the request. This can be a success with the complaint details, an error, or a no_auth response if authentication fails.</returns>
+        [HttpGet("order/complaints")]
+        public IActionResult GetOrderComplaint(int orderId = -1)
+        {
+            StringBuilder resultBuilder = new StringBuilder();
+
+            string _cookieValue = string.Empty;
+            // Check for session token in cookies
+            if (Request.Cookies["sessionToken"] != null)
+            {
+                _cookieValue = Request.Cookies["sessionToken"];
+            }
+            else return new JsonResult(new { result = "no_auth" });
+            // Validate session token
+            if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
+            // Refresh the cookie expiration
+            DateTime expireCookie = DateTime.Now.AddHours(2);
+
+            CookieOptions cookieOptions = new CookieOptions
+            {
+                Expires = expireCookie
+            };
+
+            Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (orderId == -1)
+                return new JsonResult(new { result = "error" });
+
+            try
+            {
+                logsController.AddLog(_cookieValue, "Pobranie reklamacji do zlecenia");
+
+                var complaint = ordersController.GetComplaint(orderId);
+
+                if (complaint.id == -1)
+                    return new JsonResult(new { result = "error" });
+
+                return new JsonResult(new
+                {
+                    result = "done",
+                    complaint = complaint
+                });
+            }
+            catch (MySqlException ex)
+            {
+                resultBuilder.Clear().Append("error");
+                Logger.SendException("MechApp", "OrdersController", "GetOrderComplaints", ex);
+            }
+
+            return new JsonResult(new { result = resultBuilder.ToString() });
+        }
+
+        /// <summary>
         /// Retrieves detailed information for a specific order based on its ID. The method validates the user's session token,
         /// extends the session, and queries the order details.
         /// 
@@ -463,6 +519,55 @@ namespace MechAppBackend.Controllers
             }
 
             return new JsonResult(new {result = resultBuilder.ToString() });
+        }
+
+        /// <summary>
+        /// HTTP POST endpoint for adding a complaint to an order.
+        /// </summary>
+        /// <param name="complaint">The complaint object containing details about the complaint to be added.</param>
+        /// <returns>JSON result containing the operation result status.</returns>
+        [HttpPost("complaint")]
+        public IActionResult AddComplaint([FromBody] addOrderComplaintOb complaint)
+        {
+            StringBuilder resultBuilder = new StringBuilder();
+
+            string _cookieValue = string.Empty;
+            // Check for session token in cookies
+            if (Request.Cookies["sessionToken"] != null)
+            {
+                _cookieValue = Request.Cookies["sessionToken"];
+            }
+            else return new JsonResult(new { result = "no_auth" });
+            // Validate session token
+            if (!cookieToken.checkCookie(_cookieValue)) return new JsonResult(new { result = "no_auth" });
+            // Refresh the cookie expiration
+            DateTime expireCookie = DateTime.Now.AddHours(2);
+
+            CookieOptions cookieOptions = new CookieOptions
+            {
+                Expires = expireCookie
+            };
+
+            Response.Cookies.Append("sessionToken", _cookieValue, cookieOptions);
+
+            if (!roles.isAuthorized(_cookieValue, "orders", "add"))
+                return new JsonResult(new { result = "no_permission" });
+
+            try
+            {
+                logsController.AddLog(_cookieValue, "Dodanie reklamacji do zlecenia!");
+
+                string result = ordersController.AddComplaint(complaint);
+
+                resultBuilder.Append(result);
+            }
+            catch (MySqlException ex)
+            {
+                resultBuilder.Clear().Append("error");
+                Logger.SendException("MechApp", "OrdersController", "AddComplaint", ex);
+            }
+
+            return new JsonResult(new { result = resultBuilder.ToString() });
         }
 
         /// <summary>
