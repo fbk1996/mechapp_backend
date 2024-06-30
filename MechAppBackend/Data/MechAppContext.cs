@@ -17,6 +17,8 @@ namespace MechAppBackend.Data
         {
         }
 
+        public virtual DbSet<AbsenceRequest> AbsenceRequests { get; set; } = null!;
+        public virtual DbSet<AbsenceRequestsFile> AbsenceRequestsFiles { get; set; } = null!;
         public virtual DbSet<AppSetting> AppSettings { get; set; } = null!;
         public virtual DbSet<CheckList> CheckLists { get; set; } = null!;
         public virtual DbSet<Department> Departments { get; set; } = null!;
@@ -48,6 +50,44 @@ namespace MechAppBackend.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AbsenceRequest>(entity =>
+            {
+                entity.HasIndex(e => e.UserId, "UserID");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AbsenceType).HasColumnType("text");
+
+                entity.Property(e => e.CreateDate).HasColumnType("date");
+
+                entity.Property(e => e.DateEnd).HasColumnType("date");
+
+                entity.Property(e => e.DateStart).HasColumnType("date");
+
+                entity.Property(e => e.SubmitDescription).HasColumnType("text");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AbsenceRequests)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("AbsenceRequests_ibfk_1");
+            });
+
+            modelBuilder.Entity<AbsenceRequestsFile>(entity =>
+            {
+                entity.HasIndex(e => e.RequestId, "RequestID");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.RequestId).HasColumnName("RequestID");
+
+                entity.HasOne(d => d.Request)
+                    .WithMany(p => p.AbsenceRequestsFiles)
+                    .HasForeignKey(d => d.RequestId)
+                    .HasConstraintName("AbsenceRequestsFiles_ibfk_1");
+            });
+
             modelBuilder.Entity<AppSetting>(entity =>
             {
                 entity.Property(e => e.Id).HasColumnName("ID");

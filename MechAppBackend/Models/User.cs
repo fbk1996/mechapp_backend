@@ -7,6 +7,7 @@ namespace MechAppBackend.Models
     {
         public User()
         {
+            AbsenceRequests = new HashSet<AbsenceRequest>();
             Logs = new HashSet<Log>();
             Orders = new HashSet<Order>();
             UsersDepartments = new HashSet<UsersDepartment>();
@@ -36,6 +37,7 @@ namespace MechAppBackend.Models
         public short? IsLoyalCustomer { get; set; }
         public short? IsDeleted { get; set; }
 
+        public virtual ICollection<AbsenceRequest> AbsenceRequests { get; set; }
         public virtual ICollection<Log> Logs { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<UsersDepartment> UsersDepartments { get; set; }
