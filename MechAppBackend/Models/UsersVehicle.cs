@@ -7,6 +7,7 @@ namespace MechAppBackend.Models
     {
         public UsersVehicle()
         {
+            AirConditioningEntries = new HashSet<AirConditioningEntry>();
             Orders = new HashSet<Order>();
         }
 
@@ -25,6 +26,7 @@ namespace MechAppBackend.Models
         public short? IsDeleted { get; set; }
 
         public virtual User? OwnerNavigation { get; set; }
+        public virtual ICollection<AirConditioningEntry> AirConditioningEntries { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

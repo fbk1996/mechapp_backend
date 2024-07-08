@@ -19,6 +19,8 @@ namespace MechAppBackend.Data
 
         public virtual DbSet<AbsenceRequest> AbsenceRequests { get; set; } = null!;
         public virtual DbSet<AbsenceRequestsFile> AbsenceRequestsFiles { get; set; } = null!;
+        public virtual DbSet<AirConditioningEntry> AirConditioningEntries { get; set; } = null!;
+        public virtual DbSet<AirConditioningReport> AirConditioningReports { get; set; } = null!;
         public virtual DbSet<AppSetting> AppSettings { get; set; } = null!;
         public virtual DbSet<CheckList> CheckLists { get; set; } = null!;
         public virtual DbSet<Department> Departments { get; set; } = null!;
@@ -86,6 +88,60 @@ namespace MechAppBackend.Data
                     .WithMany(p => p.AbsenceRequestsFiles)
                     .HasForeignKey(d => d.RequestId)
                     .HasConstraintName("AbsenceRequestsFiles_ibfk_1");
+            });
+
+            modelBuilder.Entity<AirConditioningEntry>(entity =>
+            {
+                entity.HasIndex(e => e.ClientId, "ClientID");
+
+                entity.HasIndex(e => e.DepartmentId, "DepartmentID");
+
+                entity.HasIndex(e => e.VehicleId, "VehicleID");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ClientId).HasColumnName("ClientID");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
+
+                entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+
+                entity.Property(e => e.VehicleId).HasColumnName("VehicleID");
+
+                entity.HasOne(d => d.Client)
+                    .WithMany(p => p.AirConditioningEntries)
+                    .HasForeignKey(d => d.ClientId)
+                    .HasConstraintName("AirConditioningEntries_ibfk_2");
+
+                entity.HasOne(d => d.Department)
+                    .WithMany(p => p.AirConditioningEntries)
+                    .HasForeignKey(d => d.DepartmentId)
+                    .HasConstraintName("AirConditioningEntries_ibfk_1");
+
+                entity.HasOne(d => d.Vehicle)
+                    .WithMany(p => p.AirConditioningEntries)
+                    .HasForeignKey(d => d.VehicleId)
+                    .HasConstraintName("AirConditioningEntries_ibfk_3");
+            });
+
+            modelBuilder.Entity<AirConditioningReport>(entity =>
+            {
+                entity.HasIndex(e => e.DepartmentId, "DepartmentID");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.DateFrom).HasColumnType("date");
+
+                entity.Property(e => e.DateTo).HasColumnType("date");
+
+                entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
+
+                entity.HasOne(d => d.Department)
+                    .WithMany(p => p.AirConditioningReports)
+                    .HasForeignKey(d => d.DepartmentId)
+                    .HasConstraintName("AirConditioningReports_ibfk_1");
             });
 
             modelBuilder.Entity<AppSetting>(entity =>
