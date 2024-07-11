@@ -23,6 +23,8 @@ namespace MechAppBackend.Data
         public virtual DbSet<AirConditioningReport> AirConditioningReports { get; set; } = null!;
         public virtual DbSet<AppSetting> AppSettings { get; set; } = null!;
         public virtual DbSet<CheckList> CheckLists { get; set; } = null!;
+        public virtual DbSet<Demand> Demands { get; set; } = null!;
+        public virtual DbSet<DemandsItem> DemandsItems { get; set; } = null!;
         public virtual DbSet<Department> Departments { get; set; } = null!;
         public virtual DbSet<Estimate> Estimates { get; set; } = null!;
         public virtual DbSet<EstimatePart> EstimateParts { get; set; } = null!;
@@ -106,7 +108,9 @@ namespace MechAppBackend.Data
 
                 entity.Property(e => e.DepartmentId).HasColumnName("DepartmentID");
 
-                entity.Property(e => e.IsDeleted).HasColumnName("isDeleted");
+                entity.Property(e => e.IsDeleted)
+                    .HasColumnName("isDeleted")
+                    .HasDefaultValueSql("'0'");
 
                 entity.Property(e => e.VehicleId).HasColumnName("VehicleID");
 
@@ -207,6 +211,51 @@ namespace MechAppBackend.Data
                     .WithMany(p => p.CheckLists)
                     .HasForeignKey(d => d.OrderId)
                     .HasConstraintName("CheckList_ibfk_1");
+            });
+
+            modelBuilder.Entity<Demand>(entity =>
+            {
+                entity.HasIndex(e => e.DepartmentId, "DepartmentId");
+
+                entity.HasIndex(e => e.UserId, "UserId");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Date).HasColumnType("date");
+
+                entity.Property(e => e.IsDeleted)
+                    .HasColumnName("isDeleted")
+                    .HasDefaultValueSql("'0'");
+
+                entity.HasOne(d => d.Department)
+                    .WithMany(p => p.Demands)
+                    .HasForeignKey(d => d.DepartmentId)
+                    .HasConstraintName("Demands_ibfk_2");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Demands)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("Demands_ibfk_1");
+            });
+
+            modelBuilder.Entity<DemandsItem>(entity =>
+            {
+                entity.HasIndex(e => e.DemandId, "DemandId");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Ean)
+                    .HasColumnType("text")
+                    .HasColumnName("EAN");
+
+                entity.Property(e => e.GrossUnitPrice).HasPrecision(10);
+
+                entity.Property(e => e.Name).HasColumnType("text");
+
+                entity.HasOne(d => d.Demand)
+                    .WithMany(p => p.DemandsItems)
+                    .HasForeignKey(d => d.DemandId)
+                    .HasConstraintName("DemandsItems_ibfk_1");
             });
 
             modelBuilder.Entity<Department>(entity =>

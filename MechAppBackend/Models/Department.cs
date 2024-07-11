@@ -9,6 +9,7 @@ namespace MechAppBackend.Models
         {
             AirConditioningEntries = new HashSet<AirConditioningEntry>();
             AirConditioningReports = new HashSet<AirConditioningReport>();
+            Demands = new HashSet<Demand>();
             Orders = new HashSet<Order>();
             UsersDepartments = new HashSet<UsersDepartment>();
             Warehouses = new HashSet<Warehouse>();
@@ -23,6 +24,7 @@ namespace MechAppBackend.Models
 
         public virtual ICollection<AirConditioningEntry> AirConditioningEntries { get; set; }
         public virtual ICollection<AirConditioningReport> AirConditioningReports { get; set; }
+        public virtual ICollection<Demand> Demands { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
         public virtual ICollection<UsersDepartment> UsersDepartments { get; set; }
         public virtual ICollection<Warehouse> Warehouses { get; set; }
