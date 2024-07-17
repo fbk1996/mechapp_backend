@@ -80,7 +80,8 @@ namespace MechAppBackend.Controllers
                     {
                         id = item.Id,
                         name = item.Name,
-                        membersCount = _context.UsersRoles.Count(ur => ur.RoleId == item.Id)
+                        membersCount = _context.UsersRoles.Count(ur => ur.RoleId == item.Id),
+                        count = _context.Roles.Count()
                     }).ToList();
 
                 logsController.AddLog(_cookieValue, "Pobranie listy ról");
@@ -168,6 +169,7 @@ namespace MechAppBackend.Controllers
                     {"warehouse", new Dictionary<string, bool> {{"view", false}, { "edit", false}, { "add", false}, { "delete", false} } },
                     {"demands", new Dictionary<string, bool> {{"view", false}, { "edit", false}, { "add", false}, { "delete", false} } },
                     {"prices", new Dictionary<string, bool> {{"view", false}, { "edit", false} } },
+                    {"tickets", new Dictionary<string, bool> {{"view", false}, { "add", false} } },
                     {"logs", new Dictionary<string, bool> {{"view", false}} }
                 };
                 // Deserialize role permissions from the database

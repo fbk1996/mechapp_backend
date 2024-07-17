@@ -35,7 +35,7 @@ namespace MechAppBackend.Helpers
                 // Create a permission structure
                 var permissionStructure = new Dictionary<string, Dictionary<string, bool>>
                 {
-                    {"profile", new Dictionary<string, bool> { {"edit", false}, { "passChange", false}, {"emailChange", false }, {"delAccount", false} } },
+                    {"profile", new Dictionary<string, bool> { {"edit", false}, { "passChange", false}, {"emailChange", false }, { "phoneChange", false }, { "delAccount", false} } },
                     {"departments", new Dictionary<string, bool> { {"view", false}, {"edit", false}, {"add", false}, {"delete", false}, {"links", false} } },
                     {"workPosition", new Dictionary<string, bool> {{"view", false}, {"edit", false}, {"add", false}, {"delete", false} } },
                     {"airConditioningReports", new Dictionary<string, bool> {{"view", false}, {"edit", false}, {"add", false}, {"delete", false} } },
@@ -50,6 +50,7 @@ namespace MechAppBackend.Helpers
                     {"warehouse", new Dictionary<string, bool> {{"view", false}, { "edit", false}, { "add", false}, { "delete", false} } },
                     {"demands", new Dictionary<string, bool> {{"view", false}, { "edit", false}, { "add", false}, { "delete", false} } },
                     {"prices", new Dictionary<string, bool> {{"view", false}, { "edit", false} } },
+                    {"tickets", new Dictionary<string, bool> {{"view", false}, { "add", false} } },
                     {"logs", new Dictionary<string, bool> {{"view", false}} }
                 };
                 // For each of the user's roles
@@ -109,6 +110,7 @@ namespace MechAppBackend.Helpers
                     warehouse = false,
                     demands = false,
                     prices = false,
+                    tickets = false,
                     logs = false
                 };   
                 // Get the user's roles
@@ -118,7 +120,7 @@ namespace MechAppBackend.Helpers
                 // Create a permission structure
                 var permissionStructure = new Dictionary<string, Dictionary<string, bool>>
                 {
-                    {"profile", new Dictionary<string, bool> { {"edit", false}, { "passChange", false}, {"emailChange", false }, {"delAccount", false} } },
+                    {"profile", new Dictionary<string, bool> { {"edit", false}, { "passChange", false}, {"emailChange", false }, { "phoneChange", false }, { "delAccount", false} } },
                     {"departments", new Dictionary<string, bool> { {"view", false}, {"edit", false}, {"add", false}, {"delete", false}, {"links", false} } },
                     {"workPosition", new Dictionary<string, bool> {{"view", false}, {"edit", false}, {"add", false}, {"delete", false} } },
                     {"airConditioningReports", new Dictionary<string, bool> {{"view", false}, {"edit", false}, {"add", false}, {"delete", false} } },
@@ -132,6 +134,7 @@ namespace MechAppBackend.Helpers
                     {"services", new Dictionary<string, bool> {{"view", false}, { "edit", false }, { "add", false}, { "delete", false} } },
                     {"warehouse", new Dictionary<string, bool> {{"view", false}, { "edit", false}, { "add", false}, { "delete", false} } },
                     {"demands", new Dictionary<string, bool> {{"view", false}, { "edit", false}, { "add", false}, { "delete", false} } },
+                    {"tickets", new Dictionary<string, bool> {{"view", false}, { "add", false} } },
                     {"prices", new Dictionary<string, bool> {{"view", false}, { "edit", false} } },
                     {"logs", new Dictionary<string, bool> {{"view", false}} }
                 };
@@ -175,6 +178,7 @@ namespace MechAppBackend.Helpers
                     warehouse = permissionStructure["warehouse"]["view"],
                     demands = permissionStructure["demands"]["view"],
                     prices = permissionStructure["prices"]["view"],
+                    tickets = permissionStructure["tickets"]["view"],
                     logs = permissionStructure["logs"]["view"]
                 };
             }
@@ -197,6 +201,7 @@ namespace MechAppBackend.Helpers
                     warehouse = false,
                     demands = false,
                     prices = false,
+                    tickets = false,
                     logs = false
                 };
             }
@@ -218,6 +223,7 @@ namespace MechAppBackend.Helpers
         public bool warehouse { get; set; }
         public bool demands { get; set; }
         public bool prices { get; set; }
+        public bool tickets { get; set; }
         public bool logs { get; set; }
     }
 }

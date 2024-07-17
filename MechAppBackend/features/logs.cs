@@ -36,7 +36,8 @@ namespace MechAppBackend.features
                                 lastname = u.Lastname
                             }).FirstOrDefault(),
                         date = l.Date,
-                        action = l.Action
+                        action = l.Action,
+                        count = _context.Logs.Count()
                     }).ToList();
                 // Return the list of logs
                 return logsDb;
@@ -104,6 +105,7 @@ namespace MechAppBackend.features
         public DateTime? date { get; set; }
         public string? action { get; set; }
         public string? description { get; set; }
+        public int? count { get; set; }
     }
 
     public class logsUserOb

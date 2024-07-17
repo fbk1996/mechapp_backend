@@ -166,7 +166,8 @@ namespace MechAppBackend.features
                                 description = oc.Description,
                                 submitDescription = oc.SubmitDescription,
                                 complaintDate = oc.Date
-                            }).FirstOrDefault()
+                            }).FirstOrDefault(),
+                    count = query.Count()
                 }).ToList();
 
                 return ordersDb;
@@ -1540,6 +1541,7 @@ namespace MechAppBackend.features
         public estimateOb estimate { get; set; }
         public ChecklistOb checklist { get; set; }
         public orderComplaintsOb complaint { get; set; }
+        public int? count { get; set; }
     }
 
     public class orderClientOb

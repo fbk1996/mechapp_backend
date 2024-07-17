@@ -26,6 +26,8 @@ builder.Services.AddDbContext<MechAppContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("MechAppConnection")));
 builder.Services.AddDbContext<MechappClientsContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("MechAppClientsConnection")));
+builder.Services.AddDbContext<MechappApContext>(options =>
+    options.UseMySQL(builder.Configuration.GetConnectionString("MechAppApConnection")));
 
 var app = builder.Build();
 

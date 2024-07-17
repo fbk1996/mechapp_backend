@@ -30,7 +30,8 @@ namespace MechAppBackend.features
                         description = d.Description,
                         address = d.Address,
                         postcode = d.Postcode,
-                        city = d.City
+                        city = d.City,
+                        count = _context.Departments.Count()
                     }).ToList();
                 // Return the list of departments
                 return departmentsList;
@@ -52,5 +53,6 @@ namespace MechAppBackend.features
         public string? address { get; set; }
         public string? postcode { get; set; }
         public string? city { get; set; }
+        public int? count { get; set; }
     }
 }

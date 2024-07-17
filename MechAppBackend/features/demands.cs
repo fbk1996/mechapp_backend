@@ -68,7 +68,8 @@ namespace MechAppBackend.features
                             name = d.Department.Name
                         },
                         date = d.Date,
-                        status = d.Status
+                        status = d.Status,
+                        count = query.Count()
                     }).ToList();
 
                 return demands;
@@ -474,6 +475,7 @@ namespace MechAppBackend.features
         public demandDepartmentOb? department { get; set; }
         public DateTime? date { get; set; }
         public int? status { get; set; }
+        public int? count { get; set; }
     }
 
     public class demandDetailOb

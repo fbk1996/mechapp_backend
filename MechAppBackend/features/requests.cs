@@ -51,7 +51,8 @@ namespace MechAppBackend.features
                         dateStart = r.DateStart,
                         dateEnd = r.DateEnd,
                         status = r.Status,
-                        absenceType = r.AbsenceType
+                        absenceType = r.AbsenceType,
+                        count = query.Count()
                     }).ToList();
 
                 return requests;
@@ -364,6 +365,7 @@ namespace MechAppBackend.features
         public DateTime? dateEnd { get; set; }
         public int? status { get; set; }
         public string? absenceType { get; set; }
+        public int? count { get; set; }
     }
 
     public class requestDetailsOb

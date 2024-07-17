@@ -71,7 +71,8 @@ namespace MechAppBackend.features
                         },
                         date = a.Date,
                         status = a.Status,
-                        type = a.Type
+                        type = a.Type,
+                        count = query.Count()
                     }).ToList();
 
                 return entries;
@@ -126,7 +127,8 @@ namespace MechAppBackend.features
                         {
                             id = (int)a.Department.Id,
                             name = a.Department.Name
-                        }
+                        },
+                        count = query.Count()
                     }).ToList();
 
                 return reports;
@@ -489,6 +491,7 @@ namespace MechAppBackend.features
         public DateTime? date { get; set; }
         public int? status { get; set; }
         public int? type { get; set; }
+        public int? count { get; set; }
     }
 
     public class airConditioningEntriesDetails
@@ -522,6 +525,7 @@ namespace MechAppBackend.features
         public float? amountEnd { get; set; }
         public int? type { get; set; }
         public airConditioningReportsDepartment? department { get; set; }
+        public int? count { get; set; }
     }
 
     public class airConditioningReportsDepartment

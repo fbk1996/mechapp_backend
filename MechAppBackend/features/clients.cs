@@ -56,6 +56,7 @@ namespace MechAppBackend.features
                         companyName = u.CompanyName,
                         nip = u.Nip,
                         isLoyalCustomer = u.IsLoyalCustomer,
+                        count = query.Count()
                     }).ToList();
 
                 return clients;
@@ -379,6 +380,7 @@ namespace MechAppBackend.features
         public string? companyName { get; set; }
         public string? nip { get; set; }
         public int? isLoyalCustomer { get; set; }
+        public int? count { get; set; }
     }
 
     public class clientDetailsOb

@@ -4,7 +4,7 @@
     {
         public static string dbhost = "213.222.222.170";
         //public static string dbdatabase = "motodex";
-        public static string dbdatabase = "mechapp";
+        public static string dbdatabase = "mechappNew";
         public static string dbuser = "AppAdmin";
         public static string dbpassword = "Entropia13!";
         public static string dbhost2 = "213.222.222.170";

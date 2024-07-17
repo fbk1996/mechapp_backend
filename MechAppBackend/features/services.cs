@@ -31,7 +31,8 @@ namespace MechAppBackend.features
                         name = s.Name,
                         duration = s.Duration,
                         price = s.Price,
-                        isActive = s.IsActive
+                        isActive = s.IsActive,
+                        count = _context.Services.Count()
                     }).ToList();
                 // Return the list of services
                 return serviceList;
@@ -239,6 +240,7 @@ namespace MechAppBackend.features
         public float? duration { get; set; }
         public decimal? price { get; set; }
         public int? isActive { get; set; }
+        public int? count { get; set; }
     }
 
     public class addServiceOb

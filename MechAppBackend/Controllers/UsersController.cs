@@ -115,6 +115,7 @@ namespace MechAppBackend.Controllers
                     email = u.Email,
                     phone = u.Phone,
                     departments = users.Where(u => u.UsersDepartments.Any(ur => ur.Id == u.Id)).ToList(),
+                    count = users.Count()
                 }).ToList();
 
                 logsControlller.AddLog(_cookieValue, "Pobranie listy użytkowników");

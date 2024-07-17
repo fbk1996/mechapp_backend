@@ -45,7 +45,8 @@ namespace MechAppBackend.features
                         name = w.Name,
                         ean = w.Ean,
                         amount = w.Amount,
-                        unitPrice = w.UnitPrice
+                        unitPrice = w.UnitPrice,
+                        count = query.Count()
                     }).ToList();
 
                 return warehouseItems;
@@ -357,6 +358,7 @@ namespace MechAppBackend.features
         public string? ean { get; set; }
         public int? amount { get; set; }
         public decimal? unitPrice { get; set; }
+        public int? count { get; set; }
     }
 
     public class warehouseItemDetailsOb

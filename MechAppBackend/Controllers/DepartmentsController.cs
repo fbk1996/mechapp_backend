@@ -86,7 +86,8 @@ namespace MechAppBackend.Controllers
                         description = d.Description,
                         address = d.Address,
                         postcode = d.Postcode,
-                        city = d.City
+                        city = d.City,
+                        count = _context.Departments.Count()
                     }).ToList();
 
                 logsController.AddLog(_cookieValue, "Pobranie listy oddziałów");

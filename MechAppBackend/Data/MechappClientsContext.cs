@@ -18,6 +18,9 @@ namespace MechAppBackend.Data
         }
 
         public virtual DbSet<ClientsDatum> ClientsData { get; set; } = null!;
+        public virtual DbSet<Ticket> Tickets { get; set; } = null!;
+        public virtual DbSet<TicketsFile> TicketsFiles { get; set; } = null!;
+        public virtual DbSet<TicketsMessage> TicketsMessages { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -87,6 +90,59 @@ namespace MechAppBackend.Data
                 entity.Property(e => e.SmtpUser).HasColumnType("text");
 
                 entity.Property(e => e.Subscription).HasColumnType("text");
+            });
+
+            modelBuilder.Entity<Ticket>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.ClientEmail).HasColumnType("text");
+
+                entity.Property(e => e.ClientLastname).HasColumnType("text");
+
+                entity.Property(e => e.ClientName).HasColumnType("text");
+
+                entity.Property(e => e.ClientPhone).HasColumnType("text");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.SubscriptionId).HasColumnType("text");
+
+                entity.Property(e => e.Title).HasColumnType("text");
+            });
+
+            modelBuilder.Entity<TicketsFile>(entity =>
+            {
+                entity.HasIndex(e => e.MessageId, "MessageId");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Name).HasColumnType("text");
+
+                entity.HasOne(d => d.Message)
+                    .WithMany(p => p.TicketsFiles)
+                    .HasForeignKey(d => d.MessageId)
+                    .HasConstraintName("TicketsFiles_ibfk_1");
+            });
+
+            modelBuilder.Entity<TicketsMessage>(entity =>
+            {
+                entity.HasIndex(e => e.TicketId, "TicketId");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.IsNotificationSend)
+                    .HasColumnName("isNotificationSend")
+                    .HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.Message).HasColumnType("text");
+
+                entity.Property(e => e.User).HasColumnType("text");
+
+                entity.HasOne(d => d.Ticket)
+                    .WithMany(p => p.TicketsMessages)
+                    .HasForeignKey(d => d.TicketId)
+                    .HasConstraintName("TicketsMessages_ibfk_1");
             });
 
             OnModelCreatingPartial(modelBuilder);
